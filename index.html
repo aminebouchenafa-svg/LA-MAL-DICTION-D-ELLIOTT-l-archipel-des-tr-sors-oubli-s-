@@ -90,20 +90,22 @@ button.small{padding:6px 12px;font-size:14px;}
 .charcard .pw{font-size:10.5px;background:rgba(245,197,66,.12);border-radius:6px;padding:4px 6px;margin-top:5px;color:var(--gold);line-height:1.4;}
 .charcard .badge{position:absolute;top:-10px;right:-10px;width:28px;height:28px;border-radius:50%;background:var(--gold);color:#3a2600;font-family:'Pirata One';display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 10px var(--gold);}
 .charcard .muted{font-size:10px;color:#9dceee;margin-top:3px;}
-footer{background:rgba(6,21,35,.8);border-top:2px solid rgba(245,197,66,.3);padding:6px 10px;display:flex;gap:8px;overflow-x:auto;flex-shrink:0;align-items:stretch;}
-.navire{min-width:160px;flex:0 0 160px;border-radius:12px;border:2px solid var(--nc,#fff);background:rgba(0,0,0,.45);padding:7px;transition:box-shadow .2s;position:relative;}
-.navire.active{box-shadow:0 0 18px var(--nc,#fff);border-width:3px;}
-.navire.skip{opacity:.6;}
-.navire.done{opacity:.5;}
-.navire-top{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
-.navire-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;border:2px solid var(--nc,#fff);}
-.navire-name{font-family:'Pirata One';font-size:12.5px;color:var(--nc,#fff);line-height:1.1;}
-.navire-ship{font-size:10px;opacity:.7;margin-top:1px;}
-.navire-power{font-size:9.5px;background:rgba(245,197,66,.1);border:1px solid rgba(245,197,66,.25);border-radius:5px;padding:3px 6px;color:var(--gold);margin-bottom:5px;line-height:1.3;}
-.navire-res{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
-.res{background:rgba(255,255,255,.07);border-radius:4px;padding:2px 3px;font-size:9px;text-align:center;line-height:1.3;}
-.res .rv{font-family:'Pirata One';font-size:13px;}
-.navire-pos{font-size:9px;opacity:.55;margin-top:4px;text-align:center;}
+footer{background:rgba(4,14,28,.92);border-top:2px solid rgba(245,197,66,.4);padding:8px 12px;display:flex;gap:10px;overflow-x:auto;flex-shrink:0;align-items:stretch;}
+.navire{min-width:210px;flex:0 0 210px;border-radius:14px;border:2.5px solid var(--nc,#fff);background:linear-gradient(160deg,rgba(0,0,0,.7),rgba(6,21,35,.8));padding:10px;transition:box-shadow .25s;position:relative;}
+.navire.active{box-shadow:0 0 24px var(--nc,#fff),inset 0 0 12px rgba(255,255,255,.05);border-width:3px;}
+.navire.skip{opacity:.55;}
+.navire.done{opacity:.45;}
+.navire-top{display:flex;align-items:center;gap:9px;margin-bottom:7px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.1);}
+.navire-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:2.5px solid var(--nc,#fff);background:rgba(0,0,0,.5);}
+.navire-name{font-family:'Pirata One';font-size:14px;color:var(--nc,#fff);line-height:1.15;}
+.navire-ship{font-size:11px;opacity:.75;margin-top:2px;color:var(--nc,#fff);}
+.navire-power{font-size:11px;background:rgba(245,197,66,.12);border:1px solid rgba(245,197,66,.3);border-radius:6px;padding:4px 8px;color:var(--gold);margin-bottom:8px;line-height:1.4;}
+.navire-res{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:6px;}
+.res{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:5px 4px;text-align:center;line-height:1.3;}
+.res-icon{font-size:18px;display:block;}
+.res-val{font-family:'Pirata One';font-size:18px;color:#fff;display:block;line-height:1;}
+.res-lbl{font-size:9.5px;color:rgba(255,255,255,.6);display:block;margin-top:1px;}
+.navire-pos{font-size:10px;opacity:.6;text-align:center;padding-top:6px;border-top:1px solid rgba(255,255,255,.08);}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:200;}
 .particle{position:absolute;font-size:22px;animation:floatUp 1.3s ease-out forwards;}
 @keyframes floatUp{0%{transform:translateY(0) scale(.5);opacity:1;}100%{transform:translateY(-150px) scale(1.4) rotate(40deg);opacity:0;}}
@@ -133,7 +135,7 @@ footer{background:rgba(6,21,35,.8);border-top:2px solid rgba(245,197,66,.3);padd
   .cell{width:48px;height:48px;font-size:15px;border-radius:7px;}
   .cell .lbl{font-size:5.5px;}.cell .num{font-size:6px;}
   footer{overflow-x:auto;flex-wrap:nowrap;padding:4px 5px;gap:5px;}
-  .navire{min-width:148px;flex:0 0 148px;padding:6px;}
+  .navire{min-width:190px;flex:0 0 190px;padding:8px;}
   .modal{padding:12px;max-height:88svh;}.modal h2{font-size:24px;}.modal p{font-size:13px;}.modal .big{font-size:44px;}
   .combatGrid{flex-direction:column;gap:8px;}.fighter{min-width:0;}.vs{font-size:28px;}
   button{font-size:15px;padding:9px 13px;}button.small{font-size:12px;padding:5px 9px;}
@@ -281,7 +283,24 @@ function renderPlayers(){
     const nav=document.createElement('div');
     nav.className='navire'+(isActive?' active':'')+((p.skip&&!p.done)?' skip':''+(p.done?' done':''));
     nav.style.setProperty('--nc',p.color);
-    nav.innerHTML=`<div class="navire-top"><div class="navire-avatar" style="background:rgba(0,0,0,.5);border-color:${p.color}">${p.emoji}</div><div><div class="navire-name">${p.name}</div><div class="navire-ship" style="color:${p.color}">${ch.navire}</div></div></div><div class="navire-power">${pwr.icon} <b>${pwr.name}</b> · ${pwr.desc}</div><div class="navire-res"><div class="res"><div class="rv">⚔️</div>${p.swords}<div style="font-size:8px">épées</div></div><div class="res"><div class="rv">💣</div>${p.cannons}<div style="font-size:8px">canons</div></div><div class="res"><div class="rv">🛡️</div>${p.shields}<div style="font-size:8px">boucliers</div></div><div class="res"><div class="rv">🪙</div>${p.gold}<div style="font-size:8px">or</div></div><div class="res"><div class="rv">💎</div>${tpts}<div style="font-size:8px">trésors</div></div><div class="res"><div class="rv">🃏</div>${p.cards.length}<div style="font-size:8px">cartes</div></div></div><div class="navire-pos">Case ${p.pos%TRACK} · Tour ${p.laps||0}${p.done?' ✔ Rentré':''}${p.skip&&!p.done?' ⛓️':''}${p.ghostShield?' 👻':''}</div>`;
+    nav.innerHTML=`
+      <div class="navire-top">
+        <div class="navire-avatar" style="border-color:${p.color}">${p.emoji}</div>
+        <div>
+          <div class="navire-name">${p.name}</div>
+          <div class="navire-ship">⛵ ${ch.navire}</div>
+        </div>
+      </div>
+      <div class="navire-power">${pwr.icon} <b>${pwr.name}</b><br><span style="opacity:.8">${pwr.desc}</span></div>
+      <div class="navire-res">
+        <div class="res"><span class="res-icon">⚔️</span><span class="res-val">${p.swords}</span><span class="res-lbl">Épées</span></div>
+        <div class="res"><span class="res-icon">💣</span><span class="res-val">${p.cannons}</span><span class="res-lbl">Canons</span></div>
+        <div class="res"><span class="res-icon">🛡️</span><span class="res-val">${p.shields}</span><span class="res-lbl">Boucliers</span></div>
+        <div class="res"><span class="res-icon">🪙</span><span class="res-val">${p.gold}</span><span class="res-lbl">Or</span></div>
+        <div class="res"><span class="res-icon">💎</span><span class="res-val">${tpts}</span><span class="res-lbl">Trésors</span></div>
+        <div class="res"><span class="res-icon">🏆</span><span class="res-val">${score(p)}</span><span class="res-lbl">Score</span></div>
+      </div>
+      <div class="navire-pos">📍 Case ${p.pos%TRACK} · 🔄 Tour ${p.laps||0}${p.done?' · ✅ Rentré':''}${p.skip&&!p.done?' · ⛓️ Bloqué':''}${p.ghostShield?' · 👻 Spectre':''}</div>`;
     f.appendChild(nav);
   });
   const p=players[cur];
