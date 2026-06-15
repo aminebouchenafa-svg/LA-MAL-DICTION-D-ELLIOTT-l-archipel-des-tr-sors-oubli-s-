@@ -19,6 +19,7 @@ body{
   background:radial-gradient(ellipse at 50% 30%, #143a5e 0%, var(--ocean1) 45%, var(--ocean2) 100%);
   color:#f0e6d2; overflow:hidden;
 }
+/* Animated ocean shimmer */
 body::before{
   content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
@@ -27,7 +28,10 @@ body::before{
   animation:waves 16s linear infinite;
 }
 @keyframes waves{0%{background-position:0 0,0 0;}100%{background-position:600px 0,-600px 0;}}
+
 #app{position:relative; z-index:1; height:100vh; display:flex; flex-direction:column;}
+
+/* HEADER */
 header{
   display:flex; align-items:center; justify-content:space-between;
   padding:6px 18px; background:linear-gradient(180deg,rgba(8,20,38,.95),rgba(8,20,38,.6));
@@ -44,7 +48,11 @@ h1 small{display:block; font-size:14px; color:#cfe6ff; text-shadow:none; font-fa
   background:rgba(0,0,0,.4); border:2px solid; box-shadow:0 0 18px currentColor;
 }
 #turnBox .dot{width:18px;height:18px;border-radius:50%;box-shadow:0 0 10px currentColor;}
+
+/* MAIN GRID */
 main{flex:1; display:grid; grid-template-columns:240px 1fr 280px; gap:10px; padding:10px; min-height:0;}
+
+/* LOG / sidebars */
 .side{
   background:linear-gradient(180deg,rgba(10,28,50,.9),rgba(6,18,34,.95));
   border:2px solid rgba(245,197,66,.4); border-radius:14px; padding:10px;
@@ -57,6 +65,8 @@ main{flex:1; display:grid; grid-template-columns:240px 1fr 280px; gap:10px; padd
 #log div.curse{border-left-color:#8e44ad;}
 #log div.bless{border-left-color:#1abc9c;}
 #log div.treasure{border-left-color:var(--gold);}
+
+/* dice area */
 #diceArea{margin-top:8px; display:flex; flex-direction:column; gap:8px; align-items:center;}
 .die3d{
   width:70px; height:70px; border-radius:14px; background:linear-gradient(145deg,#fff,#dfe6ee);
@@ -66,6 +76,8 @@ main{flex:1; display:grid; grid-template-columns:240px 1fr 280px; gap:10px; padd
 .die3d.rolling{animation:roll .6s ease infinite;}
 @keyframes roll{0%{transform:rotate(0) scale(1);}50%{transform:rotate(180deg) scale(1.15);}100%{transform:rotate(360deg) scale(1);}}
 .specialDie{background:linear-gradient(145deg,#3a1f6b,#7d3cc9); color:#fff; font-size:13px; text-align:center; padding:4px; line-height:1.1; box-shadow:0 6px 0 #2a1450,0 8px 16px rgba(0,0,0,.5);}
+
+/* board */
 #boardWrap{position:relative; display:flex; align-items:center; justify-content:center; min-height:0;}
 #board{position:relative; width:100%; height:100%; max-width:760px; max-height:760px; aspect-ratio:1/1; margin:auto;}
 .cell{
@@ -88,6 +100,8 @@ main{flex:1; display:grid; grid-template-columns:240px 1fr 280px; gap:10px; padd
 .cell.ghost{background:linear-gradient(145deg,#2c1a4a,#160a26); border-color:#9b59b6; animation:glow 1.6s ease-in-out infinite;}
 @keyframes glow{0%,100%{box-shadow:0 0 6px rgba(245,197,66,.5),0 3px 6px rgba(0,0,0,.4);}50%{box-shadow:0 0 20px rgba(245,197,66,.95),0 3px 6px rgba(0,0,0,.4);}}
 .cell.cur{outline:3px solid #fff; outline-offset:1px;}
+
+/* ships */
 .ship{
   position:absolute; width:30px; height:30px; transform:translate(-50%,-50%);
   font-size:22px; transition:left .35s cubic-bezier(.4,1.4,.6,1), top .35s cubic-bezier(.4,1.4,.6,1);
@@ -95,6 +109,8 @@ main{flex:1; display:grid; grid-template-columns:240px 1fr 280px; gap:10px; padd
 }
 .ship.active{animation:bob .8s ease-in-out infinite;}
 @keyframes bob{0%,100%{margin-top:0;}50%{margin-top:-5px;}}
+
+/* center compass */
 #compass{
   position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
   width:42%; height:42%; border-radius:50%;
@@ -106,6 +122,8 @@ main{flex:1; display:grid; grid-template-columns:240px 1fr 280px; gap:10px; padd
 @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
 #compass h3{font-family:'Pirata One'; color:#cfe6ff; font-size:18px; margin-top:6px;}
 #compass p{font-size:11px; opacity:.8; margin-top:4px;}
+
+/* footer players */
 footer{display:flex; gap:8px; padding:8px 10px; background:linear-gradient(0deg,rgba(8,20,38,.95),rgba(8,20,38,.4));}
 .pcard{
   flex:1; border-radius:12px; padding:8px; position:relative; overflow:hidden;
@@ -119,6 +137,8 @@ footer{display:flex; gap:8px; padding:8px 10px; background:linear-gradient(0deg,
 .pcard .stats{font-size:12px; margin-top:4px; display:flex; flex-wrap:wrap; gap:2px 8px;}
 .pcard .pos{font-size:10px; opacity:.7;}
 .pcard.skip{opacity:.55; filter:grayscale(.4);}
+
+/* buttons */
 button{
   font-family:'Pirata One'; cursor:pointer; border:none; border-radius:10px; color:#fff;
   padding:10px 18px; font-size:18px; letter-spacing:.5px;
@@ -131,7 +151,10 @@ button:disabled{filter:grayscale(.7); opacity:.6; cursor:not-allowed; box-shadow
 button.sec{background:linear-gradient(145deg,#3a6ea5,#234c78); color:#fff; box-shadow:0 4px 0 #142d4a,0 6px 12px rgba(0,0,0,.4);}
 button.danger{background:linear-gradient(145deg,#e74c3c,#a93226); color:#fff; box-shadow:0 4px 0 #6e1d14,0 6px 12px rgba(0,0,0,.4);}
 button.small{padding:6px 12px; font-size:15px;}
+
 #mainBtn{font-size:24px; padding:14px 26px; margin-top:6px;}
+
+/* MODAL */
 .overlay{
   position:fixed; inset:0; z-index:100; background:rgba(2,8,16,.78); backdrop-filter:blur(3px);
   display:flex; align-items:center; justify-content:center; padding:20px;
@@ -155,6 +178,8 @@ button.small{padding:6px 12px; font-size:15px;}
 .card-vis.bless{background:linear-gradient(160deg,#0d4a52,#062a30); border-color:#1abc9c; color:#9deedf;}
 .card-vis h3{font-family:'Pirata One'; font-size:26px; color:#fff;}
 .btnrow{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px;}
+
+/* setup */
 #setup .charpick{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:18px 0;}
 .charcard{
   width:150px; border-radius:14px; padding:14px 10px; border:3px solid; cursor:pointer;
@@ -169,9 +194,65 @@ button.small{padding:6px 12px; font-size:15px;}
 .shopRow .lbl2{text-align:left; font-size:15px;}
 .invGrid{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:12px 0;}
 .invGrid .it{background:rgba(255,255,255,.08); border:1px solid rgba(245,197,66,.4); border-radius:8px; padding:6px 10px; font-size:14px;}
+
+/* particles */
 #fx{position:fixed; inset:0; pointer-events:none; z-index:200;}
 .particle{position:absolute; font-size:24px; animation:floatUp 1.3s ease-out forwards;}
 @keyframes floatUp{0%{transform:translateY(0) scale(.5); opacity:1;}100%{transform:translateY(-160px) scale(1.4) rotate(40deg); opacity:0;}}
+
+/* ===== RESPONSIVE — Tablette (≤1024px) ===== */
+@media (max-width:1024px){
+  main{grid-template-columns:1fr 250px;}
+  aside.side:first-child{display:none;}
+}
+/* ===== RESPONSIVE — Mobile (≤640px) ===== */
+@media (max-width:640px){
+  body{overflow:auto;}
+  #app{height:auto; min-height:100svh;}
+  header{padding:6px 10px; flex-wrap:wrap; gap:4px;}
+  h1{font-size:20px;}
+  h1 small{font-size:11px;}
+  #turnBox{font-size:16px; padding:4px 10px;}
+  main{grid-template-columns:1fr; grid-template-rows:auto; padding:4px; gap:4px;}
+  aside.side:first-child{order:10; flex-direction:row; align-items:center; padding:6px 10px; min-height:0;}
+  aside.side:first-child h2{display:none;}
+  aside.side:first-child #log{display:none;}
+  aside.side:first-child #diceArea{flex-direction:row; margin:0; width:100%; justify-content:space-between; align-items:center; gap:8px;}
+  #helpSide{display:none;}
+  #boardWrap{min-height:80vw; max-height:80vw;}
+  #board{max-width:calc(100vw - 8px); max-height:calc(100vw - 8px);}
+  .cell{width:52px; height:52px; font-size:17px; border-radius:8px;}
+  .cell .lbl{font-size:6.5px;}
+  .cell .num{font-size:7px;}
+  footer{overflow-x:auto; flex-wrap:nowrap; padding:4px 6px; gap:5px;}
+  .pcard{min-width:140px; flex:0 0 140px; padding:6px; gap:6px;}
+  .pcard .avatar{width:40px; height:40px; flex:0 0 40px; font-size:22px;}
+  .pcard .pname{font-size:13px;}
+  .pcard .stats{font-size:11px; gap:2px 5px;}
+  .modal{padding:14px; max-height:88svh;}
+  .modal h2{font-size:24px;}
+  .modal p{font-size:14px;}
+  .modal .big{font-size:46px; margin:6px;}
+  .card-vis{padding:12px; max-width:100%;}
+  .card-vis h3{font-size:20px;}
+  .combatGrid{flex-direction:column; gap:8px;}
+  .fighter{min-width:0;}
+  .vs{font-size:28px;}
+  .btnrow{gap:8px;}
+  button{font-size:16px; padding:10px 14px;}
+  button.small{font-size:13px; padding:6px 10px;}
+  #mainBtn{font-size:18px; padding:10px 18px; margin-top:0;}
+  .die3d{width:58px; height:58px; font-size:28px;}
+  .shopRow{padding:8px 10px;}
+  #setup .charpick{gap:10px;}
+  .charcard{width:130px; padding:10px 8px;}
+  .charcard .av{font-size:40px;}
+  .charcard .nm{font-size:15px;}
+}
+/* Touch optimisation */
+button{touch-action:manipulation; -webkit-tap-highlight-color:transparent;}
+html{-webkit-text-size-adjust:100%; text-size-adjust:100%;}
+
 .combatGrid{display:flex; gap:20px; justify-content:center; align-items:stretch; flex-wrap:wrap; margin:16px 0;}
 .fighter{flex:1; min-width:200px; border-radius:14px; padding:14px; border:2px solid; background:rgba(0,0,0,.35);}
 .fighter h3{font-family:'Pirata One'; font-size:22px;}
@@ -222,15 +303,27 @@ button.small{padding:6px 12px; font-size:15px;}
   <footer id="footer"></footer>
 </div>
 <div id="fx"></div>
+<!-- Mobile log toggle -->
+<button id="logToggle" onclick="toggleMobileLog()" style="display:none;position:fixed;bottom:14px;left:14px;z-index:80;font-size:18px;padding:10px 14px;border-radius:50%;width:52px;height:52px;">📋</button>
+<div id="mobileLog" style="display:none;position:fixed;inset:0;z-index:90;background:rgba(2,8,16,.92);padding:16px;overflow-y:auto;flex-direction:column;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span style="font-family:'Pirata One';font-size:22px;color:var(--gold);">Journal de Bord</span>
+    <button onclick="toggleMobileLog()" class="danger" style="font-size:16px;padding:8px 14px;">✕ Fermer</button>
+  </div>
+  <div id="mobileLogContent" style="font-size:13px;line-height:1.5;"></div>
+</div>
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
 
 <script>
+/* ============================== DATA ============================== */
 const CHARS=[
   {id:0,name:"Capitaine Rosa Tempête",color:"#9B59B6",emoji:"👩‍🦰",ship:"⛵",desc:"Tresses rousses, manteau pourpre"},
   {id:1,name:"Barbe de Corail",color:"#E67E22",emoji:"🧔",ship:"🚢",desc:"Barbe corail, manteau orange"},
   {id:2,name:"La Serpiente",color:"#27AE60",emoji:"🥷",ship:"⛴️",desc:"Rusé et agile, vert émeraude"},
   {id:3,name:"Fantôme Bleu",color:"#2980B9",emoji:"🎭",ship:"🛳️",desc:"Mystérieux et masqué, bleu"}
 ];
+
+// 48-square track types
 const TYPES=["start","normal","wild","special","normal","habit","treasure","normal","shop","wild","special","normal",
 "volcano","normal","treasure","habit","normal","special","wild","bar","normal","treasure","normal","shop",
 "special","wild","normal","ghost","treasure","normal","special","volcano","normal","wild","shop","normal",
@@ -241,6 +334,7 @@ const TYPEINFO={
   bar:{e:"🍺",l:"Vieux Bar"}, treasure:{e:"💎",l:"Trésor"}, special:{e:"🎲",l:"Spéciale"},
   ghost:{e:"👻",l:"Fantôme"}
 };
+
 const CURSES=[
   {n:"Le Souffle du Pendu",t:"Un courant violent vous repousse de 6 cases en arrière.",f:p=>{move(p,-6);}},
   {n:"La Brume d'Émeraude",t:"Votre navire tourne en rond : passez votre prochain tour.",f:p=>{p.skip=true;}},
@@ -253,6 +347,7 @@ const CURSES=[
   {n:"L'Ancre de Plomb",t:"Une ancre invisible immobilise votre navire. Vous passez ce tour, les autres avancent de 2.",f:p=>{p.skip=true; players.forEach(o=>{if(o!==p&&!o.done) move(o,2);});}},
   {n:"La Malédiction du Pendu",t:"⚠️ La pire malédiction ! Le fantôme d'Elliott vous renvoie à la case départ.",f:p=>{moveTo(p,0);}}
 ];
+
 const FAVORS=[
   {n:"Le Trident d'Or",t:"Poséidon vous souffle dans les voiles : avancez de 5 cases.",f:p=>{move(p,5);}},
   {n:"Le Bouclier de Corail",t:"Un bouclier des mers ! Protège d'un combat (gardez-le en main).",f:p=>{p.shields++;}},
@@ -265,6 +360,7 @@ const FAVORS=[
   {n:"La Marée Montante",t:"La marée porte tous les navires : tout le monde avance de 2 cases.",f:p=>{players.forEach(o=>{if(!o.done) move(o,2);});}},
   {n:"Le Trésor Volant",t:"Vos hommes pillent la flotte ! Volez 1 pièce d'or à chaque autre joueur.",f:p=>{players.forEach(o=>{if(o!==p&&!o.done&&o.gold>0){o.gold--;p.gold++;log(p.name+" vole 1 or à "+o.name+".","bless");}});}}
 ];
+
 const TREASURES=[
   {key:"diamant",n:"Diamant des Caraïbes",e:"💎",pts:5},
   {key:"relique",n:"Relique Ancienne",e:"🏺",pts:4},
@@ -273,13 +369,18 @@ const TREASURES=[
   {key:"coffre",n:"Coffre de Doublons",e:"🪙",pts:3,gold:3},
   {key:"carte",n:"Carte au Trésor",e:"🗺️",pts:1,jump:true}
 ];
+
+/* ============================== STATE ============================== */
 let players=[], cur=0, curseDeck=[], favorDeck=[], busy=false, gameOver=false, ghostLoot=[];
 const TRACK=48;
+
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
 function rebuildDecks(){curseDeck=shuffle(CURSES); favorDeck=shuffle(FAVORS);}
 function drawCurse(){if(!curseDeck.length)curseDeck=shuffle(CURSES);return curseDeck.shift();}
 function drawFavor(){if(!favorDeck.length)favorDeck=shuffle(FAVORS);return favorDeck.shift();}
-let cellPos=[];
+
+/* ============================== POSITIONS ============================== */
+let cellPos=[]; // {x,y} in % for each track index
 function computeCellPositions(){
   cellPos=[];
   const R=46, n=TRACK;
@@ -288,8 +389,11 @@ function computeCellPositions(){
     cellPos.push({x:50+R*Math.cos(ang), y:50+R*Math.sin(ang)});
   }
 }
+
+/* ============================== BUILD BOARD ============================== */
 function buildBoard(){
   const board=document.getElementById('board');
+  // clear old cells/ships keep compass
   board.querySelectorAll('.cell,.ship').forEach(e=>e.remove());
   computeCellPositions();
   for(let i=0;i<TRACK;i++){
@@ -309,6 +413,7 @@ function buildBoard(){
 function placeShip(p){
   const s=document.getElementById('ship'+p.id); if(!s)return;
   const pos=cellPos[p.pos%TRACK];
+  // small offset so ships on same cell don't fully overlap
   const same=players.filter(o=>o.pos%TRACK===p.pos%TRACK);
   const idx=same.indexOf(p); const off=(idx-(same.length-1)/2)*9;
   s.style.left=(pos.x)+'%'; s.style.top=(pos.y)+'%';
@@ -319,6 +424,8 @@ function highlightCell(){
   document.querySelectorAll('.cell.cur').forEach(c=>c.classList.remove('cur'));
   const p=players[cur]; if(p) document.getElementById('cell'+(p.pos%TRACK))?.classList.add('cur');
 }
+
+/* ============================== LOG & FX ============================== */
 function log(msg,cls=''){
   const d=document.createElement('div'); if(cls)d.className=cls; d.innerHTML=msg;
   document.getElementById('log').prepend(d);
@@ -332,7 +439,9 @@ function particles(emoji,count=14){
     fx.appendChild(p); setTimeout(()=>p.remove(),1700);
   }
 }
-function move(p,delta){
+
+/* ============================== MOVEMENT ============================== */
+function move(p,delta){ // relative, no wrap-around triggering laps here for negatives
   p.pos+=delta;
   if(p.pos<0)p.pos=0;
   if(p.pos>=TRACK){ p.pos=p.pos%TRACK; p.laps=(p.laps||0)+1; }
@@ -345,6 +454,8 @@ function nearestType(from,type){
   }
   return from;
 }
+
+/* ============================== UI RENDER ============================== */
 function renderPlayers(){
   const f=document.getElementById('footer'); f.innerHTML='';
   players.forEach((p,i)=>{
@@ -364,6 +475,7 @@ function renderPlayers(){
       </div>`;
     f.appendChild(card);
   });
+  // active panel
   const p=players[cur];
   if(p){
     const tr=p.treasures.map(t=>`${t.e} ${t.n}${t.count>1?' ×'+t.count:''}`).join('<br>')||'<span class="muted">aucun</span>';
@@ -373,10 +485,13 @@ function renderPlayers(){
       <b>Trésors :</b><br>${tr}<br><br>
       <b>Score actuel :</b> ${score(p)} pts`;
   }
+  // turn box
   const tb=document.getElementById('turnBox'); tb.style.color=p.color;
   tb.querySelector('.dot').style.background=p.color;
   document.getElementById('turnName').textContent=gameOver?'Partie terminée':p.name;
 }
+
+/* ============================== COMBAT POWER & SCORE ============================== */
 function power(p){return p.cannons*3 + p.swords;}
 function loseWeapon(p,silent){
   if(p.cannons>0){p.cannons--; if(!silent)log(p.name+" perd un boulet de canon.","curse");}
@@ -394,6 +509,8 @@ function score(p){
   p.treasures.forEach(t=>{s+=(t.pts||0)*(t.count||1);});
   return s;
 }
+
+/* ============================== SETUP ============================== */
 function showSetup(){
   const m=document.getElementById('modal');
   let chosen=[];
@@ -416,12 +533,14 @@ function showSetup(){
       if(chosen.includes(id)){chosen=chosen.filter(x=>x!==id); card.classList.remove('sel'); card.querySelector('.badge')?.remove();}
       else{ if(chosen.length>=4)return; chosen.push(id); card.classList.add('sel');
         const b=document.createElement('div'); b.className='badge'; b.textContent=chosen.length; card.appendChild(b);}
+      // renumber badges
       chosen.forEach((cid,i)=>{const cc=m.querySelector(`.charcard[data-id="${cid}"] .badge`); if(cc)cc.textContent=i+1;});
       document.getElementById('startBtn').disabled=chosen.length<2;
     };
   });
   document.getElementById('startBtn').onclick=()=>{ startGame(chosen); };
 }
+
 function startGame(ids){
   players=ids.map(id=>{
     const c=CHARS[id];
@@ -435,6 +554,8 @@ function startGame(ids){
   log("Chaque capitaine débute avec 1 épée ⚔️ et 2 pièces d'or 🪙.");
   updateMainBtn();
 }
+
+/* ============================== MAIN TURN FLOW ============================== */
 function updateMainBtn(){
   const b=document.getElementById('mainBtn');
   if(gameOver){b.textContent="Nouvelle Partie"; b.disabled=false; return;}
@@ -442,6 +563,7 @@ function updateMainBtn(){
   b.disabled=busy;
   b.textContent=p.skip?`${p.name} : passer le tour`:"Lancer les Dés";
 }
+
 function onMainBtn(){
   if(gameOver){ showSetup(); return; }
   if(busy)return;
@@ -449,11 +571,13 @@ function onMainBtn(){
   if(p.skip){ p.skip=false; log("⛓️ "+p.name+" est bloqué et passe son tour.","curse"); endTurn(); return; }
   rollAndMove();
 }
+
 function animateDie(el,faces,finalText,cb){
   el.classList.add('rolling'); let t=0;
   const iv=setInterval(()=>{ el.textContent=faces[Math.random()*faces.length|0]; },80);
   setTimeout(()=>{ clearInterval(iv); el.classList.remove('rolling'); el.textContent=finalText; cb&&cb(); },700);
 }
+
 function rollAndMove(){
   busy=true; updateMainBtn();
   const p=players[cur];
@@ -462,10 +586,11 @@ function rollAndMove(){
   animateDie(dieEl,['🎲','⚀','⚁','⚂','⚃','⚄','⚅'],['⚀','⚁','⚂','⚃','⚄','⚅'][roll-1],()=>{
     let steps=roll;
     if(p.halfMove){ steps=Math.ceil(roll/2); p.halfMove=false; log("⛵ Voile déchirée : "+p.name+" n'avance que de "+steps+".","curse"); }
-    log("🎲 "+p.name+" lance le dé : <b>"+roll+"</b>"+(steps!==roll?(" (déplacement réduit à "+steps+")"):"|"));
+    log("🎲 "+p.name+" lance le dé : <b>"+roll+"</b>"+(steps!==roll?(" (déplacement réduit à "+steps+")"):""));
     stepMove(p,steps,()=>{ onLand(p); });
   });
 }
+
 function stepMove(p,steps,done){
   if(steps<=0){ done(); return; }
   p.pos++;
@@ -476,16 +601,20 @@ function stepMove(p,steps,done){
   placeShip(p); highlightCell(); renderPlayers();
   setTimeout(()=>stepMove(p,steps-1,done),360);
 }
+
 function onLand(p){
+  // completed circuit? (laps >=1 and at/just passed start) -> win condition: reached or passed start after a full lap
   if((p.laps||0)>=1){ finishPlayer(p); return; }
   const t=TYPES[p.pos];
   log("🧭 "+p.name+" accoste sur : "+TYPEINFO[t].l+" (case "+p.pos+").");
+  // check combat by collision
   const others=players.filter(o=>o!==p&&!o.done&&o.pos%TRACK===p.pos%TRACK);
   if(others.length>=1 && t!=='start'){
     handleCollision(p,others); return;
   }
   resolveTile(p,t);
 }
+
 function resolveTile(p,t){
   switch(t){
     case 'special': rollSpecialDie(p); break;
@@ -531,11 +660,13 @@ function ghostEvent(p){
   showOverlay();
   document.getElementById('closeGhost').onclick=()=>{hideOverlay();afterTile(p);};
 }
+
 function afterTile(p){
   renderPlayers(); highlightCell();
-  if(p.extraTurn){ p.extraTurn=false; log("💨 "+p.name+" rejoue grâce au Coup de Chance !","bless"); busy=false; updateMainBtn(); return; }
+  if(p.extraTurn){ p.extraTurn=false; log("💨 "+p.name+" rejoue grâce au Vent du Destin !","bless"); busy=false; updateMainBtn(); return; }
   endTurn();
 }
+
 function endTurn(){
   renderPlayers();
   busy=false;
@@ -544,6 +675,8 @@ function endTurn(){
   highlightCell(); renderPlayers(); updateMainBtn();
   log("➡️ Au tour de <b style='color:"+players[cur].color+"'>"+players[cur].name+"</b>.");
 }
+
+/* ============================== TILE EVENTS ============================== */
 function wildEvent(p){
   const roll=1+(Math.random()*6|0);
   log("🌴 Île sauvage ! "+p.name+" lance le dé : <b>"+roll+"</b>.");
@@ -582,6 +715,8 @@ function habitEvent(p){
   else { log("🏘️ Village paisible : les habitants offrent un bouclier !","bless"); p.shields++; }
   afterTile(p);
 }
+
+/* ============================== SPECIAL DIE ============================== */
 const SPECIAL_FACES=[
   {n:"LE SOUFFLE FANTÔME",e:"☠️"},{n:"LA BÉNÉDICTION DES ABYSSES",e:"🔱"},{n:"ORDRE DE BATAILLE",e:"⚔️"},
   {n:"LE BUTIN DES COURANTS",e:"🪙"},{n:"LE VENT EN POUPE",e:"🌬️"},{n:"L'APPARITION D'ELLIOTT",e:"👻"}
@@ -642,6 +777,7 @@ function elliottSteal(p){
   });
   document.getElementById('noSteal').onclick=()=>{hideOverlay();afterTile(p);};
 }
+// when special die shifts forward onto a possibly meaningful tile, just re-evaluate collisions/treasure lightly
 function onLandAfterShift(p){
   const others=players.filter(o=>o!==p&&!o.done&&o.pos%TRACK===p.pos%TRACK);
   if(others.length>=1){ handleCollision(p,others); return; }
@@ -649,6 +785,8 @@ function onLandAfterShift(p){
   if(t==='treasure'){ giveTreasure(p,()=>afterTile(p)); return; }
   afterTile(p);
 }
+
+/* ============================== CARDS ============================== */
 function drawAndApply(kind,p,done){
   if(kind==='curse'&&p._armorEcume){
     p._armorEcume=false;
@@ -672,6 +810,7 @@ function drawAndApply(kind,p,done){
     card.f(p);
     if(kind==='curse'){ log("☠️ "+p.name+" subit « "+card.n+" ».","curse"); particles('👻',8); }
     else { log("🔱 "+p.name+" reçoit « "+card.n+" ».","bless"); particles('✨',10); }
+    if(card.n==="Bouclier des Mers"){ /* shields handled */ }
     placeShip(p); refreshShips(); highlightCell();
     let extra='';
     if(p._peek){ extra='<p class="muted">Prochaines malédictions : '+p._peek.join(' · ')+'</p>'; }
@@ -683,20 +822,26 @@ function drawAndApply(kind,p,done){
     renderPlayers();
   };
 }
+
+/* ============================== TREASURE ============================== */
 function giveTreasure(p,done){
   const t=TREASURES[Math.random()*TREASURES.length|0];
-  let count=1;
+  let count=1, pts=t.pts;
   if(t.multi){ count=1+(Math.random()*3|0); }
+  // build text
   let txt=`<div class="big">${t.e}</div><h3>${t.n}</h3>`;
   if(t.gold){ p.gold+=t.gold; txt+=`<p>+${t.gold} pièces d'or et ${t.pts} pts !</p>`; }
   else if(t.multi){ txt+=`<p>Vous trouvez ${count} perle(s) noire(s) — ${t.pts} pts chacune !</p>`; }
   else txt+=`<p>Vaut ${t.pts} points.</p>`;
   if(t.curse) txt+=`<p style="color:#d6a8ec">Mais l'artefact est maudit : une malédiction vous attend...</p>`;
   if(t.jump) txt+=`<p>Au prochain tour, vous sauterez vers une île au trésor.</p>`;
+
+  // store treasure
   const existing=p.treasures.find(x=>x.key===t.key && (t.multi||t.gold));
   if(t.multi){ if(existing)existing.count+=count; else p.treasures.push({key:t.key,n:t.n,e:t.e,pts:t.pts,count}); }
   else p.treasures.push({key:t.key,n:t.n,e:t.e,pts:t.pts,count:1});
   if(t.jump) p.jumpNext=true;
+
   const m=document.getElementById('modal');
   m.innerHTML=`<h2>💎 Trésor Oublié !</h2><div class="card-vis bless">${txt}</div>
     <div class="btnrow"><button id="grabT">Empocher le butin</button></div>`;
@@ -708,6 +853,8 @@ function giveTreasure(p,done){
     renderPlayers();
   };
 }
+
+/* ============================== SHOP ============================== */
 function openShop(p){
   let cannonStock=5;
   function render(){
@@ -740,6 +887,8 @@ function openShop(p){
   }
   showOverlay(); render();
 }
+
+/* ============================== COMBAT ============================== */
 function chooseCombat(p){
   const rivals=players.filter(o=>o!==p&&!o.done);
   if(!rivals.length){ log("⚔️ Aucun rival à combattre.","combat"); afterTile(p); return; }
@@ -753,6 +902,7 @@ function chooseCombat(p){
   });
   document.getElementById('noFight').onclick=()=>{hideOverlay(); log(p.name+" renonce au combat.","combat"); afterTile(p);};
 }
+
 function handleCollision(p,others){
   const group=[p,...others];
   if(group.length>=3){
@@ -764,6 +914,7 @@ function handleCollision(p,others){
   log("⚔️ "+p.name+" croise "+r.name+" : combat inévitable !","combat");
   startCombat(p,r,()=>afterTile(p));
 }
+
 function truceModal(group,done){
   let idx=0;
   function ask(){
@@ -783,6 +934,7 @@ function truceModal(group,done){
   }
   ask();
 }
+
 const COMBAT_FACES=[
   {n:"Rien",e:"➖",sword:0,cannon:0},
   {n:"+1 épée",e:"⚔️",sword:1,cannon:0},
@@ -791,10 +943,12 @@ const COMBAT_FACES=[
   {n:"+1 canon",e:"💣",sword:0,cannon:1},
   {n:"SUPRÉMATIE",e:"👑",supreme:true}
 ];
+
 function startCombat(a,d,done){
+  // Offer shields first; if anyone uses one, the combat is cancelled and we go straight to done().
   offerShield(a,d,
-    ()=>{ hideOverlay(); done(); },
-    ()=>resolveCombat(a,d,done));
+    /*onCancel*/()=>{ hideOverlay(); done(); },
+    /*onFight*/()=>resolveCombat(a,d,done));
 }
 function offerShield(a,d,onCancel,onFight){
   const shielders=[a,d].filter(x=>x.shields>0);
@@ -804,21 +958,24 @@ function offerShield(a,d,onCancel,onFight){
     if(i>=shielders.length){ onFight(); return; }
     const pl=shielders[i];
     const m=document.getElementById('modal');
-    m.innerHTML=`<h2>🛡️ Bouclier de Corail</h2><p>${pl.name} possède ${pl.shields} bouclier(s). L'utiliser pour annuler ce combat ?</p>
+    m.innerHTML=`<h2>🛡️ Bouclier des Mers</h2><p>${pl.name} possède ${pl.shields} bouclier(s). L'utiliser pour être immunisé et annuler ce combat ?</p>
       <div class="btnrow"><button id="useSh">Utiliser le bouclier</button><button id="noSh" class="sec">Garder & combattre</button></div>`;
     showOverlay();
-    document.getElementById('useSh').onclick=()=>{ pl.shields--; log("🛡️ "+pl.name+" lève le Bouclier de Corail : combat annulé !","bless"); renderPlayers(); onCancel(); };
+    document.getElementById('useSh').onclick=()=>{ pl.shields--; log("🛡️ "+pl.name+" lève le Bouclier des Mers : combat annulé !","bless"); renderPlayers(); onCancel(); };
     document.getElementById('noSh').onclick=()=>{ i++; ask(); };
   }
   ask();
 }
+
 function resolveCombat(a,d,done){
+  // roll combat dice for both
   let fa=Math.random()*6|0, fd=Math.random()*6|0;
   const FA=COMBAT_FACES[fa], FD=COMBAT_FACES[fd];
   let pa=power(a), pd=power(d);
   let supA=FA.supreme, supD=FD.supreme;
   if(!supA){ pa+=(FA.sword||0)+(FA.cannon||0)*3; }
   if(!supD){ pd+=(FD.sword||0)+(FD.cannon||0)*3; }
+
   const m=document.getElementById('modal');
   m.innerHTML=`<h2>⚔️ Abordage !</h2>
     <div class="combatGrid">
@@ -826,14 +983,14 @@ function resolveCombat(a,d,done){
         <h3 style="color:${a.color}">${a.emoji} ${a.name}</h3>
         <div class="muted">Base : ${power(a)} (${a.cannons}💣 ${a.swords}⚔️)</div>
         <div class="muted">Dé combat : ${FA.e} ${FA.n}</div>
-        <div class="pw">${supA?'👑 SUPRÉMATIE':pa}</div>
+        <div class="pw" id="pwA">${supA?'👑 SUPRÉMATIE':pa}</div>
       </div>
       <div class="vs">VS</div>
       <div class="fighter" style="border-color:${d.color}">
         <h3 style="color:${d.color}">${d.emoji} ${d.name}</h3>
         <div class="muted">Base : ${power(d)} (${d.cannons}💣 ${d.swords}⚔️)</div>
         <div class="muted">Dé combat : ${FD.e} ${FD.n}</div>
-        <div class="pw">${supD?'👑 SUPRÉMATIE':pd}</div>
+        <div class="pw" id="pwD">${supD?'👑 SUPRÉMATIE':pd}</div>
       </div>
     </div>
     <div id="combatResult"></div>
@@ -842,18 +999,20 @@ function resolveCombat(a,d,done){
   log("⚔️ "+a.name+" ("+FA.n+") affronte "+d.name+" ("+FD.n+").","combat");
   document.getElementById('resolveBtn').onclick=()=>{
     let winner=null, loser=null, draw=false;
-    if(supA&&supD){ if(pa>=pd){winner=a;loser=d;}else{winner=d;loser=a;} }
+    if(supA&&supD){ draw=false; if(pa>=pd){winner=a;loser=d;}else{winner=d;loser=a;} }
     else if(supA){ winner=a; loser=d; }
     else if(supD){ winner=d; loser=a; }
     else if(pa>pd){ winner=a; loser=d; }
     else if(pd>pa){ winner=d; loser=a; }
     else draw=true;
+
     let txt='';
     if(draw){
       a.swords=0;a.cannons=0;d.swords=0;d.cannons=0;
       txt=`<p style="color:#f5c542;font-size:22px">⚖️ Égalité ! Les deux capitaines perdent toutes leurs armes.</p>`;
       log("⚖️ Combat nul : "+a.name+" et "+d.name+" perdent leurs armes.","combat");
     } else {
+      // winner takes all loser's treasures + gold
       const tcount=loser.treasures.reduce((s,t)=>s+(t.count||1),0);
       loser.treasures.forEach(lt=>{
         if(lt.count&&lt.multi){ const ex=winner.treasures.find(x=>x.key===lt.key); if(ex)ex.count+=lt.count; else winner.treasures.push({...lt}); }
@@ -872,14 +1031,17 @@ function resolveCombat(a,d,done){
     document.getElementById('closeC').onclick=()=>{ hideOverlay(); done(); };
   };
 }
+
+/* ============================== FINISH / END ============================== */
 function finishPlayer(p){
   p.done=true;
   log("🏁 "+p.name+" rentre au port avec "+score(p)+" points !","treasure");
   particles('🏆',16);
   modalSimple("🏁 Retour au Port",
-    `<b style="color:${p.color}">${p.name}</b> a bouclé le tour de l'archipel !<br><br>Score provisoire : <b>${score(p)} points</b>.`,
-    [{txt:"Continuer",act:()=>{hideOverlay(); endTurn();}}]);
+    `<b style="color:${p.color}">${p.name}</b> a bouclé le tour de l'archipel et rentre au port victorieux !<br><br>Score final provisoire : <b>${score(p)} points</b>.`,
+    [{txt:"Continuer la partie",act:()=>{hideOverlay(); endTurn();}}]);
 }
+
 function endGame(){
   gameOver=true;
   const ranked=players.slice().sort((a,b)=>score(b)-score(a));
@@ -888,7 +1050,7 @@ function endGame(){
     <div style="margin:14px 0">${ranked.map((p,i)=>`
       <div class="finalRow ${i===0?'win':''}">
         <span style="color:${p.color}">${i===0?'👑 ':(i+1)+'. '}${p.emoji} ${p.name}</span>
-        <span><b>${score(p)} pts</b> · ⚔️${p.swords} 💣${p.cannons} 🪙${p.gold} 💎${p.treasures.reduce((s,t)=>s+(t.count||1),0)} 🛡️${p.shields}</span>
+        <span><b>${score(p)} pts</b> · ⚔️${p.swords} 💣${p.cannons} 🪙${p.gold} 💎${p.treasures.reduce((s,t)=>s+(t.count||1),0)} 🛡️${p.shields} 🃏${p.cards.length}</span>
       </div>`).join('')}</div>
     <p style="font-family:'Pirata One';font-size:26px;color:${ranked[0].color}">Vainqueur : ${ranked[0].name} !</p>
     <div class="btnrow"><button id="again">Nouvelle Partie</button></div>`;
@@ -896,6 +1058,8 @@ function endGame(){
   document.getElementById('again').onclick=()=>showSetup();
   updateMainBtn(); renderPlayers();
 }
+
+/* ============================== MODAL HELPERS ============================== */
 function modalSimple(title,html,buttons){
   const m=document.getElementById('modal');
   m.innerHTML=`<h2>${title}</h2><p>${html}</p><div class="btnrow" id="msBtns"></div>`;
@@ -905,7 +1069,28 @@ function modalSimple(title,html,buttons){
 }
 function showOverlay(){document.getElementById('overlay').classList.remove('hidden');}
 function hideOverlay(){document.getElementById('overlay').classList.add('hidden');}
-window.addEventListener('resize',()=>{ if(players.length){computeCellPositions(); buildBoard(); highlightCell();} });
+
+/* ============================== MOBILE LOG ============================== */
+function toggleMobileLog(){
+  const ml=document.getElementById('mobileLog');
+  const show=ml.style.display==='none'||ml.style.display==='';
+  if(show){
+    const entries=document.getElementById('log').querySelectorAll('div');
+    const c=document.getElementById('mobileLogContent'); c.innerHTML='';
+    entries.forEach(e=>{const d=e.cloneNode(true); d.style.marginBottom='8px'; c.appendChild(d);});
+    ml.style.display='flex';
+  } else {
+    ml.style.display='none';
+  }
+}
+function isMobile(){return window.innerWidth<=640;}
+function checkMobile(){
+  document.getElementById('logToggle').style.display=isMobile()?'flex':'none';
+}
+
+/* ============================== INIT ============================== */
+window.addEventListener('resize',()=>{ checkMobile(); if(players.length){computeCellPositions(); buildBoard(); highlightCell();} });
+checkMobile();
 showSetup();
 </script>
 </body>
