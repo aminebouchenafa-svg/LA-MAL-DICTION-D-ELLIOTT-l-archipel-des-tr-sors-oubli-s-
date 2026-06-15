@@ -41,9 +41,9 @@ aside.side h2{font-family:'Pirata One';color:var(--gold);font-size:18px;border-b
 #compass .star{color:var(--gold);font-size:22px;}
 #compass h3{font-family:'Pirata One';color:var(--gold);font-size:16px;margin:4px 0;}
 #compass p{font-size:10px;color:#9dceee;line-height:1.4;}
-.cell{position:absolute;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:10px;border:2px solid rgba(255,255,255,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:default;transition:box-shadow .2s;font-size:18px;background:rgba(10,42,74,.65);backdrop-filter:blur(2px);}
+.cell{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:8px;border:1.5px solid rgba(255,255,255,.25);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;cursor:default;transition:box-shadow .2s;font-size:13px;background:rgba(10,42,74,.45);backdrop-filter:blur(1px);}
 .cell.cur{box-shadow:0 0 0 3px var(--gold),0 0 16px var(--gold);z-index:5;}
-.cell .lbl{font-size:6px;color:rgba(255,255,255,.7);text-align:center;line-height:1;}
+.cell .lbl{display:none;}
 .cell .num{font-size:7px;color:rgba(255,255,255,.5);position:absolute;top:2px;left:3px;}
 .cell.start{background:rgba(245,197,66,.3);border-color:var(--gold);}
 .cell.treasure{background:rgba(245,197,66,.25);border-color:rgba(245,197,66,.6);}
@@ -53,7 +53,7 @@ aside.side h2{font-family:'Pirata One';color:var(--gold);font-size:18px;border-b
 .cell.ghost{background:rgba(155,89,182,.35);border-color:#9b59b6;}
 .cell.bar{background:rgba(243,156,18,.25);border-color:#f39c12;}
 .cell.habit{background:rgba(46,204,113,.25);border-color:#2ecc71;}
-.ship{position:absolute;width:36px;height:36px;transform:translate(-50%,-50%);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;border:2.5px solid currentColor;z-index:4;text-shadow:0 1px 3px rgba(0,0,0,.8);transition:left .35s,top .35s;background:rgba(0,0,0,.6);}
+.ship{position:absolute;width:30px;height:30px;transform:translate(-50%,-50%);border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid currentColor;z-index:4;transition:left .35s,top .35s;background:rgba(0,0,0,.75);box-shadow:0 0 10px currentColor,0 2px 6px rgba(0,0,0,.8);}
 #helpSide{font-size:12px;overflow-y:auto;}
 #helpSide h2{font-size:16px;}
 #activePanel{line-height:1.6;}
@@ -274,7 +274,7 @@ function computeCellPositions(){cellPos=[];const R=46,n=TRACK;for(let i=0;i<n;i+
 function buildBoard(){
   const board=document.getElementById('board');board.querySelectorAll('.cell,.ship').forEach(e=>e.remove());computeCellPositions();
   for(let i=0;i<TRACK;i++){const t=TYPES[i],info=TYPEINFO[t];const c=document.createElement('div');c.className='cell '+t;c.id='cell'+i;c.style.left=cellPos[i].x+'%';c.style.top=cellPos[i].y+'%';c.innerHTML=`<span class="num">${i}</span><span>${info.e}</span><span class="lbl">${info.l}</span>`;board.appendChild(c);}
-  players.forEach(p=>{const s=document.createElement('div');s.className='ship';s.id='ship'+p.id;s.style.color=p.color;s.textContent=p.emoji;board.appendChild(s);placeShip(p);});
+  players.forEach(p=>{const s=document.createElement('div');s.className='ship';s.id='ship'+p.id;s.style.color=p.color;s.innerHTML=`<span style='font-size:14px;filter:drop-shadow(0 0 3px ${p.color});'>⛵</span>`;board.appendChild(s);placeShip(p);});
 }
 function placeShip(p){const s=document.getElementById('ship'+p.id);if(!s)return;const pos=cellPos[p.pos%TRACK];const same=players.filter(o=>o.pos%TRACK===p.pos%TRACK);const idx=same.indexOf(p);const off=(idx-(same.length-1)/2)*10;s.style.left=pos.x+'%';s.style.top=pos.y+'%';s.style.transform=`translate(calc(-50% + ${off}px), calc(-50% - ${Math.abs(off)*0.4}px))`;}
 function refreshShips(){players.forEach(placeShip);}
