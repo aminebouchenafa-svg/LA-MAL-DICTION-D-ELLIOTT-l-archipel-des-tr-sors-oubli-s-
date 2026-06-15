@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Malédiction d'Elliott — L'Archipel des Trésors Oubliés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Cinzel:wght@500;700&family=MedievalSharp&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p1:#9B59B6; --p2:#E67E22; --p3:#27AE60; --p4:#2980B9;
+  --ocean1:#0a2a4a; --ocean2:#06192e; --gold:#f5c542; --wood:#6b4226;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  font-family:'Cinzel',serif;
+  background:radial-gradient(ellipse at 50% 30%, #143a5e 0%, var(--ocean1) 45%, var(--ocean2) 100%);
+  color:#f0e6d2; overflow:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    repeating-linear-gradient(115deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 26px),
+    repeating-linear-gradient(65deg, rgba(80,180,255,0.04) 0 2px, transparent 2px 40px);
+  animation:waves 16s linear infinite;
+}
+@keyframes waves{0%{background-position:0 0,0 0;}100%{background-position:600px 0,-600px 0;}}
+#app{position:relative; z-index:1; height:100vh; display:flex; flex-direction:column;}
+header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:6px 18px; background:linear-gradient(180deg,rgba(8,20,38,.95),rgba(8,20,38,.6));
+  border-bottom:2px solid var(--gold); box-shadow:0 4px 20px rgba(0,0,0,.6);
+}
+h1{
+  font-family:'Pirata One',cursive; font-size:30px; line-height:1; color:var(--gold);
+  text-shadow:0 0 12px rgba(245,197,66,.6),2px 2px 0 #5a3a00; letter-spacing:1px;
+}
+h1 small{display:block; font-size:14px; color:#cfe6ff; text-shadow:none; font-family:'Cinzel';}
+#turnBox{
+  display:flex; align-items:center; gap:12px; font-family:'Pirata One';
+  font-size:22px; padding:6px 16px; border-radius:14px;
+  background:rgba(0,0,0,.4); border:2px solid; box-shadow:0 0 18px currentColor;
+}
+#turnBox .dot{width:18px;height:18px;border-radius:50%;box-shadow:0 0 10px currentColor;}
+main{flex:1; display:grid; grid-template-columns:240px 1fr 280px; gap:10px; padding:10px; min-height:0;}
+.side{
+  background:linear-gradient(180deg,rgba(10,28,50,.9),rgba(6,18,34,.95));
+  border:2px solid rgba(245,197,66,.4); border-radius:14px; padding:10px;
+  display:flex; flex-direction:column; min-height:0; box-shadow:inset 0 0 30px rgba(0,0,0,.4);
+}
+.side h2{font-family:'Pirata One'; color:var(--gold); font-size:22px; text-align:center; margin-bottom:6px;}
+#log{flex:1; overflow-y:auto; font-size:12.5px; line-height:1.45; display:flex; flex-direction:column-reverse;}
+#log div{padding:5px 8px; margin-bottom:5px; border-radius:8px; background:rgba(255,255,255,.06); border-left:3px solid var(--gold);}
+#log div.combat{border-left-color:#e74c3c;}
+#log div.curse{border-left-color:#8e44ad;}
+#log div.bless{border-left-color:#1abc9c;}
+#log div.treasure{border-left-color:var(--gold);}
+#diceArea{margin-top:8px; display:flex; flex-direction:column; gap:8px; align-items:center;}
+.die3d{
+  width:70px; height:70px; border-radius:14px; background:linear-gradient(145deg,#fff,#dfe6ee);
+  display:flex; align-items:center; justify-content:center; font-size:34px; color:#222;
+  box-shadow:0 6px 0 #9aa6b2, 0 8px 16px rgba(0,0,0,.5); font-family:'Pirata One';
+}
+.die3d.rolling{animation:roll .6s ease infinite;}
+@keyframes roll{0%{transform:rotate(0) scale(1);}50%{transform:rotate(180deg) scale(1.15);}100%{transform:rotate(360deg) scale(1);}}
+.specialDie{background:linear-gradient(145deg,#3a1f6b,#7d3cc9); color:#fff; font-size:13px; text-align:center; padding:4px; line-height:1.1; box-shadow:0 6px 0 #2a1450,0 8px 16px rgba(0,0,0,.5);}
+#boardWrap{position:relative; display:flex; align-items:center; justify-content:center; min-height:0;}
+#board{position:relative; width:100%; height:100%; max-width:760px; max-height:760px; aspect-ratio:1/1; margin:auto;}
+.cell{
+  position:absolute; width:64px; height:64px; transform:translate(-50%,-50%);
+  border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-size:22px; border:2px solid rgba(0,0,0,.35); cursor:default; transition:box-shadow .2s;
+  box-shadow:0 3px 6px rgba(0,0,0,.4); text-align:center;
+}
+.cell .lbl{font-size:8px; font-family:'Cinzel'; line-height:1; margin-top:1px; text-shadow:0 1px 2px #000;}
+.cell .num{position:absolute; top:1px; left:3px; font-size:8px; color:rgba(255,255,255,.6);}
+.cell.normal{background:linear-gradient(145deg,#2e6fa8,#1b4d7a);}
+.cell.wild{background:linear-gradient(145deg,#2f7d32,#15521a);}
+.cell.habit{background:linear-gradient(145deg,#d9a441,#b07a1e);}
+.cell.volcano{background:linear-gradient(145deg,#c0392b,#7b2018);}
+.cell.shop{background:linear-gradient(145deg,#16a085,#0c6b58);}
+.cell.bar{background:linear-gradient(145deg,#8e6b3a,#5b431f);}
+.cell.treasure{background:linear-gradient(145deg,#f1c40f,#c8960a); animation:glow 2s ease-in-out infinite;}
+.cell.special{background:linear-gradient(145deg,#9b59b6,#6c3483); animation:glow 2.4s ease-in-out infinite;}
+.cell.start{background:linear-gradient(145deg,#34495e,#1c2833); border-color:var(--gold);}
+.cell.ghost{background:linear-gradient(145deg,#2c1a4a,#160a26); border-color:#9b59b6; animation:glow 1.6s ease-in-out infinite;}
+@keyframes glow{0%,100%{box-shadow:0 0 6px rgba(245,197,66,.5),0 3px 6px rgba(0,0,0,.4);}50%{box-shadow:0 0 20px rgba(245,197,66,.95),0 3px 6px rgba(0,0,0,.4);}}
+.cell.cur{outline:3px solid #fff; outline-offset:1px;}
+.ship{
+  position:absolute; width:30px; height:30px; transform:translate(-50%,-50%);
+  font-size:22px; transition:left .35s cubic-bezier(.4,1.4,.6,1), top .35s cubic-bezier(.4,1.4,.6,1);
+  z-index:20; filter:drop-shadow(0 0 5px currentColor); pointer-events:none;
+}
+.ship.active{animation:bob .8s ease-in-out infinite;}
+@keyframes bob{0%,100%{margin-top:0;}50%{margin-top:-5px;}}
+#compass{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:42%; height:42%; border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, #1d5a8c, #0a2440 70%, #06182c);
+  border:3px solid rgba(245,197,66,.5); display:flex; flex-direction:column; align-items:center; justify-content:center;
+  box-shadow:0 0 40px rgba(0,0,0,.6), inset 0 0 40px rgba(0,0,0,.5); text-align:center; padding:10px;
+}
+#compass .star{font-size:54px; color:var(--gold); text-shadow:0 0 18px rgba(245,197,66,.7); animation:spin 30s linear infinite;}
+@keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+#compass h3{font-family:'Pirata One'; color:#cfe6ff; font-size:18px; margin-top:6px;}
+#compass p{font-size:11px; opacity:.8; margin-top:4px;}
+footer{display:flex; gap:8px; padding:8px 10px; background:linear-gradient(0deg,rgba(8,20,38,.95),rgba(8,20,38,.4));}
+.pcard{
+  flex:1; border-radius:12px; padding:8px; position:relative; overflow:hidden;
+  background:linear-gradient(160deg,rgba(0,0,0,.55),rgba(0,0,0,.3)); border:2px solid;
+  display:flex; gap:8px; min-width:0; transition:transform .2s, box-shadow .2s;
+}
+.pcard.active{transform:translateY(-6px); box-shadow:0 0 24px currentColor;}
+.pcard .avatar{width:54px;height:54px;border-radius:50%; flex:0 0 54px; display:flex;align-items:center;justify-content:center; font-size:30px; border:3px solid rgba(255,255,255,.5); box-shadow:0 0 12px currentColor;}
+.pcard .info{flex:1; min-width:0;}
+.pcard .pname{font-family:'Pirata One'; font-size:17px; line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.pcard .stats{font-size:12px; margin-top:4px; display:flex; flex-wrap:wrap; gap:2px 8px;}
+.pcard .pos{font-size:10px; opacity:.7;}
+.pcard.skip{opacity:.55; filter:grayscale(.4);}
+button{
+  font-family:'Pirata One'; cursor:pointer; border:none; border-radius:10px; color:#fff;
+  padding:10px 18px; font-size:18px; letter-spacing:.5px;
+  background:linear-gradient(145deg,#f5c542,#c8960a); color:#3a2600;
+  box-shadow:0 4px 0 #8a6500,0 6px 12px rgba(0,0,0,.4); transition:transform .08s, box-shadow .08s;
+}
+button:hover{filter:brightness(1.08);}
+button:active{transform:translateY(3px); box-shadow:0 1px 0 #8a6500;}
+button:disabled{filter:grayscale(.7); opacity:.6; cursor:not-allowed; box-shadow:0 4px 0 #555;}
+button.sec{background:linear-gradient(145deg,#3a6ea5,#234c78); color:#fff; box-shadow:0 4px 0 #142d4a,0 6px 12px rgba(0,0,0,.4);}
+button.danger{background:linear-gradient(145deg,#e74c3c,#a93226); color:#fff; box-shadow:0 4px 0 #6e1d14,0 6px 12px rgba(0,0,0,.4);}
+button.small{padding:6px 12px; font-size:15px;}
+#mainBtn{font-size:24px; padding:14px 26px; margin-top:6px;}
+.overlay{
+  position:fixed; inset:0; z-index:100; background:rgba(2,8,16,.78); backdrop-filter:blur(3px);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.overlay.hidden{display:none;}
+.modal{
+  background:linear-gradient(160deg,#143a5e,#08192e); border:3px solid var(--gold); border-radius:18px;
+  padding:24px; max-width:680px; width:100%; max-height:90vh; overflow-y:auto;
+  box-shadow:0 0 50px rgba(245,197,66,.4); animation:pop .35s cubic-bezier(.3,1.5,.5,1);
+  text-align:center;
+}
+@keyframes pop{from{transform:scale(.6); opacity:0;}to{transform:scale(1); opacity:1;}}
+.modal h2{font-family:'Pirata One'; color:var(--gold); font-size:34px; text-shadow:0 0 14px rgba(245,197,66,.5); margin-bottom:8px;}
+.modal p{font-size:16px; line-height:1.5; margin:10px 0;}
+.modal .big{font-size:60px; margin:10px;}
+.card-vis{
+  margin:14px auto; max-width:340px; padding:18px; border-radius:14px; border:2px solid;
+  box-shadow:0 0 24px currentColor;
+}
+.card-vis.curse{background:linear-gradient(160deg,#3a1f4f,#1a0a28); border-color:#9b59b6; color:#d6a8ec;}
+.card-vis.bless{background:linear-gradient(160deg,#0d4a52,#062a30); border-color:#1abc9c; color:#9deedf;}
+.card-vis h3{font-family:'Pirata One'; font-size:26px; color:#fff;}
+.btnrow{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px;}
+#setup .charpick{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin:18px 0;}
+.charcard{
+  width:150px; border-radius:14px; padding:14px 10px; border:3px solid; cursor:pointer;
+  background:rgba(0,0,0,.4); transition:transform .15s, box-shadow .15s; position:relative;
+}
+.charcard:hover{transform:translateY(-5px);}
+.charcard.sel{box-shadow:0 0 28px currentColor; transform:translateY(-8px) scale(1.03);}
+.charcard .av{font-size:50px;}
+.charcard .nm{font-family:'Pirata One'; font-size:18px; margin-top:6px; line-height:1;}
+.charcard .badge{position:absolute; top:-10px; right:-10px; width:30px;height:30px;border-radius:50%; background:var(--gold); color:#3a2600; font-family:'Pirata One'; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 0 10px var(--gold);}
+.shopRow{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; margin:8px 0; background:rgba(255,255,255,.06); border-radius:10px; border:1px solid rgba(245,197,66,.3);}
+.shopRow .lbl2{text-align:left; font-size:15px;}
+.invGrid{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:12px 0;}
+.invGrid .it{background:rgba(255,255,255,.08); border:1px solid rgba(245,197,66,.4); border-radius:8px; padding:6px 10px; font-size:14px;}
+#fx{position:fixed; inset:0; pointer-events:none; z-index:200;}
+.particle{position:absolute; font-size:24px; animation:floatUp 1.3s ease-out forwards;}
+@keyframes floatUp{0%{transform:translateY(0) scale(.5); opacity:1;}100%{transform:translateY(-160px) scale(1.4) rotate(40deg); opacity:0;}}
+.combatGrid{display:flex; gap:20px; justify-content:center; align-items:stretch; flex-wrap:wrap; margin:16px 0;}
+.fighter{flex:1; min-width:200px; border-radius:14px; padding:14px; border:2px solid; background:rgba(0,0,0,.35);}
+.fighter h3{font-family:'Pirata One'; font-size:22px;}
+.fighter .pw{font-size:40px; font-family:'Pirata One'; color:var(--gold); margin:8px 0;}
+.vs{display:flex; align-items:center; font-family:'Pirata One'; font-size:40px; color:#e74c3c;}
+::-webkit-scrollbar{width:8px;} ::-webkit-scrollbar-thumb{background:rgba(245,197,66,.4); border-radius:4px;}
+.finalRow{display:flex; justify-content:space-between; padding:6px 12px; margin:4px 0; background:rgba(255,255,255,.06); border-radius:8px; font-size:15px;}
+.finalRow.win{border:2px solid var(--gold); box-shadow:0 0 16px var(--gold);}
+.muted{font-size:13px; opacity:.75;}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>La Malédiction d'Elliott<small>L'Archipel des Trésors Oubliés</small></h1>
+    <div id="turnBox" style="color:#9B59B6"><span class="dot" style="background:#9B59B6"></span><span id="turnName">—</span></div>
+  </header>
+  <main>
+    <aside class="side">
+      <h2>Journal de Bord</h2>
+      <div id="log"></div>
+      <div id="diceArea">
+        <div style="display:flex;gap:10px;">
+          <div class="die3d" id="dieNum">🎲</div>
+          <div class="die3d specialDie" id="dieSpecial">Dé Spécial</div>
+        </div>
+        <button id="mainBtn" onclick="onMainBtn()">Lancer les Dés</button>
+      </div>
+    </aside>
+    <section id="boardWrap">
+      <div id="board">
+        <div id="compass">
+          <div class="star">✦</div>
+          <h3>L'Archipel</h3>
+          <p id="compassMsg">Fais le tour des 48 îles pour rentrer au port avec le plus de butin !</p>
+        </div>
+      </div>
+    </section>
+    <aside class="side" id="helpSide">
+      <h2>Capitaine Actif</h2>
+      <div id="activePanel" style="font-size:13px; line-height:1.6;"></div>
+      <h2 style="margin-top:10px;">Légende</h2>
+      <div style="font-size:11.5px;line-height:1.7;">
+        🌴 Île sauvage · 🏘️ Habitée<br>🌋 Volcan · 🏪 Marchands<br>🍺 Vieux Bar · 💎 Trésor<br>🎲 Case spéciale · 👻 Fantôme<br>⚓ Départ (2🪙 à chaque passage)
+      </div>
+    </aside>
+  </main>
+  <footer id="footer"></footer>
+</div>
+<div id="fx"></div>
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+
+<script>
+const CHARS=[
+  {id:0,name:"Capitaine Rosa Tempête",color:"#9B59B6",emoji:"👩‍🦰",ship:"⛵",desc:"Tresses rousses, manteau pourpre"},
+  {id:1,name:"Barbe de Corail",color:"#E67E22",emoji:"🧔",ship:"🚢",desc:"Barbe corail, manteau orange"},
+  {id:2,name:"La Serpiente",color:"#27AE60",emoji:"🥷",ship:"⛴️",desc:"Rusé et agile, vert émeraude"},
+  {id:3,name:"Fantôme Bleu",color:"#2980B9",emoji:"🎭",ship:"🛳️",desc:"Mystérieux et masqué, bleu"}
+];
+const TYPES=["start","normal","wild","special","normal","habit","treasure","normal","shop","wild","special","normal",
+"volcano","normal","treasure","habit","normal","special","wild","bar","normal","treasure","normal","shop",
+"special","wild","normal","ghost","treasure","normal","special","volcano","normal","wild","shop","normal",
+"treasure","special","habit","normal","wild","bar","treasure","normal","special","shop","wild","normal"];
+const TYPEINFO={
+  start:{e:"⚓",l:"Départ"}, normal:{e:"🌊",l:"Mer"}, wild:{e:"🌴",l:"Sauvage"},
+  habit:{e:"🏘️",l:"Village"}, volcano:{e:"🌋",l:"Volcan"}, shop:{e:"🏪",l:"Marchands"},
+  bar:{e:"🍺",l:"Vieux Bar"}, treasure:{e:"💎",l:"Trésor"}, special:{e:"🎲",l:"Spéciale"},
+  ghost:{e:"👻",l:"Fantôme"}
+};
+const CURSES=[
+  {n:"Le Souffle du Pendu",t:"Un courant violent vous repousse de 6 cases en arrière.",f:p=>{move(p,-6);}},
+  {n:"La Brume d'Émeraude",t:"Votre navire tourne en rond : passez votre prochain tour.",f:p=>{p.skip=true;}},
+  {n:"La Faim du Spectre",t:"Le spectre affamé exige son dû : défaussez 1 pièce d'or ou 1 trésor.",f:p=>{if(p.gold>0){p.gold--;log(p.name+" perd 1 pièce d'or au Spectre.","curse");}else if(p.treasures.length>0){p.treasures.shift();log(p.name+" perd un trésor.","curse");}else log(p.name+" n'a rien à donner au Spectre.","curse");}},
+  {n:"La Coque Percée",t:"Dégâts à bord ! Perdez 1 arme de votre choix.",f:p=>{loseWeapon(p);}},
+  {n:"Le Naufrage Silencieux",t:"Vos épées sont perdues dans les flots ! Toutes vos épées sont perdues.",f:p=>{const nb=p.swords;p.swords=0;log(p.name+" perd "+nb+" épée(s) dans le naufrage !","curse");}},
+  {n:"La Tempête du Pendu",t:"Double peine : reculez de 3 cases ET perdez 1 pièce d'or.",f:p=>{move(p,-3);if(p.gold>0){p.gold--;log(p.name+" perd 1 pièce d'or dans la tempête.","curse");}}},
+  {n:"Le Brouillard Maudit",t:"Perdu dans la brume d'Elliott : direction l'île sauvage la plus proche.",f:p=>{moveTo(p,nearestType(p.pos,"wild"));}},
+  {n:"La Mutinerie",t:"Le capitaine le moins armé profite du chaos et vous vole 1 pièce d'or !",f:p=>{mutiny(p);}},
+  {n:"L'Ancre de Plomb",t:"Une ancre invisible immobilise votre navire. Vous passez ce tour, les autres avancent de 2.",f:p=>{p.skip=true; players.forEach(o=>{if(o!==p&&!o.done) move(o,2);});}},
+  {n:"La Malédiction du Pendu",t:"⚠️ La pire malédiction ! Le fantôme d'Elliott vous renvoie à la case départ.",f:p=>{moveTo(p,0);}}
+];
+const FAVORS=[
+  {n:"Le Trident d'Or",t:"Poséidon vous souffle dans les voiles : avancez de 5 cases.",f:p=>{move(p,5);}},
+  {n:"Le Bouclier de Corail",t:"Un bouclier des mers ! Protège d'un combat (gardez-le en main).",f:p=>{p.shields++;}},
+  {n:"L'Île aux Trésors",t:"Un dauphin vous guide vers l'île au trésor la plus proche !",f:p=>{moveTo(p,nearestType(p.pos,"treasure"));}},
+  {n:"Le Canon de Neptune",t:"Neptune vous offre 1 boulet de canon gratuit !",f:p=>{p.cannons++;}},
+  {n:"L'Armure d'Écume",t:"Une armure magique ! Annule la prochaine malédiction que vous piochez.",f:p=>{p._armorEcume=true;log(p.name+" porte l'Armure d'Écume : prochaine malédiction annulée.","bless");}},
+  {n:"La Faveur Royale",t:"Faveur royale des dieux : avancez de 6 cases !",f:p=>{move(p,6);}},
+  {n:"Le Coup de Chance",t:"La fortune vous sourit : rejouez immédiatement !",f:p=>{p.extraTurn=true;}},
+  {n:"Les Épées des Abysses",t:"Deux épées émergent des profondeurs : elles sont à vous !",f:p=>{p.swords+=2;}},
+  {n:"La Marée Montante",t:"La marée porte tous les navires : tout le monde avance de 2 cases.",f:p=>{players.forEach(o=>{if(!o.done) move(o,2);});}},
+  {n:"Le Trésor Volant",t:"Vos hommes pillent la flotte ! Volez 1 pièce d'or à chaque autre joueur.",f:p=>{players.forEach(o=>{if(o!==p&&!o.done&&o.gold>0){o.gold--;p.gold++;log(p.name+" vole 1 or à "+o.name+".","bless");}});}}
+];
+const TREASURES=[
+  {key:"diamant",n:"Diamant des Caraïbes",e:"💎",pts:5},
+  {key:"relique",n:"Relique Ancienne",e:"🏺",pts:4},
+  {key:"artefact",n:"Artefact Aztèque",e:"🗿",pts:6,curse:true},
+  {key:"perles",n:"Perles Noires",e:"⚫",pts:2,multi:true},
+  {key:"coffre",n:"Coffre de Doublons",e:"🪙",pts:3,gold:3},
+  {key:"carte",n:"Carte au Trésor",e:"🗺️",pts:1,jump:true}
+];
+let players=[], cur=0, curseDeck=[], favorDeck=[], busy=false, gameOver=false, ghostLoot=[];
+const TRACK=48;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+function rebuildDecks(){curseDeck=shuffle(CURSES); favorDeck=shuffle(FAVORS);}
+function drawCurse(){if(!curseDeck.length)curseDeck=shuffle(CURSES);return curseDeck.shift();}
+function drawFavor(){if(!favorDeck.length)favorDeck=shuffle(FAVORS);return favorDeck.shift();}
+let cellPos=[];
+function computeCellPositions(){
+  cellPos=[];
+  const R=46, n=TRACK;
+  for(let i=0;i<n;i++){
+    const ang=(-90 + (i/n)*360) * Math.PI/180;
+    cellPos.push({x:50+R*Math.cos(ang), y:50+R*Math.sin(ang)});
+  }
+}
+function buildBoard(){
+  const board=document.getElementById('board');
+  board.querySelectorAll('.cell,.ship').forEach(e=>e.remove());
+  computeCellPositions();
+  for(let i=0;i<TRACK;i++){
+    const t=TYPES[i], info=TYPEINFO[t];
+    const c=document.createElement('div');
+    c.className='cell '+t; c.id='cell'+i;
+    c.style.left=cellPos[i].x+'%'; c.style.top=cellPos[i].y+'%';
+    c.innerHTML=`<span class="num">${i}</span><span>${info.e}</span><span class="lbl">${info.l}</span>`;
+    board.appendChild(c);
+  }
+  players.forEach(p=>{
+    const s=document.createElement('div'); s.className='ship'; s.id='ship'+p.id;
+    s.style.color=p.color; s.textContent=p.ship;
+    board.appendChild(s); placeShip(p);
+  });
+}
+function placeShip(p){
+  const s=document.getElementById('ship'+p.id); if(!s)return;
+  const pos=cellPos[p.pos%TRACK];
+  const same=players.filter(o=>o.pos%TRACK===p.pos%TRACK);
+  const idx=same.indexOf(p); const off=(idx-(same.length-1)/2)*9;
+  s.style.left=(pos.x)+'%'; s.style.top=(pos.y)+'%';
+  s.style.transform=`translate(calc(-50% + ${off}px), calc(-50% - ${Math.abs(off)*0.4}px))`;
+}
+function refreshShips(){players.forEach(placeShip);}
+function highlightCell(){
+  document.querySelectorAll('.cell.cur').forEach(c=>c.classList.remove('cur'));
+  const p=players[cur]; if(p) document.getElementById('cell'+(p.pos%TRACK))?.classList.add('cur');
+}
+function log(msg,cls=''){
+  const d=document.createElement('div'); if(cls)d.className=cls; d.innerHTML=msg;
+  document.getElementById('log').prepend(d);
+}
+function particles(emoji,count=14){
+  const fx=document.getElementById('fx');
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div'); p.className='particle'; p.textContent=emoji;
+    p.style.left=(40+Math.random()*20)+'%'; p.style.top=(45+Math.random()*15)+'%';
+    p.style.animationDelay=(Math.random()*.3)+'s';
+    fx.appendChild(p); setTimeout(()=>p.remove(),1700);
+  }
+}
+function move(p,delta){
+  p.pos+=delta;
+  if(p.pos<0)p.pos=0;
+  if(p.pos>=TRACK){ p.pos=p.pos%TRACK; p.laps=(p.laps||0)+1; }
+}
+function moveTo(p,target){ p.pos=target; }
+function nearestType(from,type){
+  for(let d=1;d<=TRACK;d++){
+    const a=(from+d)%TRACK; if(TYPES[a]===type)return a;
+    const b=((from-d)%TRACK+TRACK)%TRACK; if(TYPES[b]===type)return b;
+  }
+  return from;
+}
+function renderPlayers(){
+  const f=document.getElementById('footer'); f.innerHTML='';
+  players.forEach((p,i)=>{
+    const card=document.createElement('div'); card.className='pcard'+(i===cur&&!gameOver?' active':'')+(p.skip?' skip':'')+(p.done?' skip':'');
+    card.style.borderColor=p.color; card.style.color=p.color;
+    card.innerHTML=`
+      <div class="avatar" style="background:${p.color};color:#fff">${p.emoji}</div>
+      <div class="info">
+        <div class="pname" style="color:${p.color}">${p.name}</div>
+        <div class="stats">
+          <span>⚔️ ${p.swords}</span><span>💣 ${p.cannons}</span>
+          <span>🪙 ${p.gold}</span><span>🛡️ ${p.shields}</span>
+          <span>💎 ${p.treasures.reduce((s,t)=>s+(t.count||1),0)}</span>
+          <span>🃏 ${p.cards.length}</span>
+        </div>
+        <div class="pos">Case ${p.pos} · Tours: ${p.laps||0}${p.done?' · ✔ Rentré':''}${p.skip?' · ⛓️ bloqué':''}</div>
+      </div>`;
+    f.appendChild(card);
+  });
+  const p=players[cur];
+  if(p){
+    const tr=p.treasures.map(t=>`${t.e} ${t.n}${t.count>1?' ×'+t.count:''}`).join('<br>')||'<span class="muted">aucun</span>';
+    document.getElementById('activePanel').innerHTML=
+     `<b style="color:${p.color}">${p.name}</b><br>${p.desc}<br><br>
+      <b>Puissance combat :</b> ${power(p)}<br>
+      <b>Trésors :</b><br>${tr}<br><br>
+      <b>Score actuel :</b> ${score(p)} pts`;
+  }
+  const tb=document.getElementById('turnBox'); tb.style.color=p.color;
+  tb.querySelector('.dot').style.background=p.color;
+  document.getElementById('turnName').textContent=gameOver?'Partie terminée':p.name;
+}
+function power(p){return p.cannons*3 + p.swords;}
+function loseWeapon(p,silent){
+  if(p.cannons>0){p.cannons--; if(!silent)log(p.name+" perd un boulet de canon.","curse");}
+  else if(p.swords>0){p.swords--; if(!silent)log(p.name+" perd une épée.","curse");}
+  else if(!silent)log(p.name+" n'a aucune arme à perdre.","curse");
+}
+function mutiny(target){
+  let least=null;
+  players.forEach(o=>{if(o!==target&&!o.done){if(!least||power(o)<power(least))least=o;}});
+  if(least&&target.gold>0){target.gold--; least.gold++; log(least.name+" (le moins armé) vole 1 or à "+target.name+" !","curse");}
+  else log("Personne ne profite de la mutinerie.","curse");
+}
+function score(p){
+  let s=p.swords*1 + p.cannons*2 + p.gold*1 + p.shields*1 + p.cards.length*1;
+  p.treasures.forEach(t=>{s+=(t.pts||0)*(t.count||1);});
+  return s;
+}
+function showSetup(){
+  const m=document.getElementById('modal');
+  let chosen=[];
+  m.innerHTML=`<div id="setup">
+    <h2>☠️ Embarquement ☠️</h2>
+    <p>Choisis tes capitaines (2 à 4 joueurs). Clique sur les pirates qui prennent la mer.</p>
+    <div class="charpick">${CHARS.map(c=>`
+      <div class="charcard" data-id="${c.id}" style="border-color:${c.color};color:${c.color}">
+        <div class="av">${c.emoji}</div>
+        <div class="nm" style="color:${c.color}">${c.name}</div>
+        <div class="muted" style="color:#cfe6ff">${c.desc}</div>
+      </div>`).join('')}</div>
+    <div class="btnrow"><button id="startBtn" disabled>Larguez les amarres !</button></div>
+    <p class="muted">Objectif : boucler le tour de l'archipel (48 cases) et rentrer au port avec le plus de points.</p>
+  </div>`;
+  showOverlay();
+  m.querySelectorAll('.charcard').forEach(card=>{
+    card.onclick=()=>{
+      const id=+card.dataset.id;
+      if(chosen.includes(id)){chosen=chosen.filter(x=>x!==id); card.classList.remove('sel'); card.querySelector('.badge')?.remove();}
+      else{ if(chosen.length>=4)return; chosen.push(id); card.classList.add('sel');
+        const b=document.createElement('div'); b.className='badge'; b.textContent=chosen.length; card.appendChild(b);}
+      chosen.forEach((cid,i)=>{const cc=m.querySelector(`.charcard[data-id="${cid}"] .badge`); if(cc)cc.textContent=i+1;});
+      document.getElementById('startBtn').disabled=chosen.length<2;
+    };
+  });
+  document.getElementById('startBtn').onclick=()=>{ startGame(chosen); };
+}
+function startGame(ids){
+  players=ids.map(id=>{
+    const c=CHARS[id];
+    return {id,name:c.name,color:c.color,emoji:c.emoji,ship:c.ship,desc:c.desc,
+      pos:0,laps:0,swords:1,cannons:0,gold:2,shields:0,treasures:[],cards:[],
+      skip:false,halfMove:false,extraTurn:false,done:false};
+  });
+  cur=0; gameOver=false; rebuildDecks();
+  hideOverlay(); buildBoard(); highlightCell(); renderPlayers();
+  log("⚓ Les capitaines lèvent l'ancre dans l'Archipel des Trésors Oubliés !");
+  log("Chaque capitaine débute avec 1 épée ⚔️ et 2 pièces d'or 🪙.");
+  updateMainBtn();
+}
+function updateMainBtn(){
+  const b=document.getElementById('mainBtn');
+  if(gameOver){b.textContent="Nouvelle Partie"; b.disabled=false; return;}
+  const p=players[cur];
+  b.disabled=busy;
+  b.textContent=p.skip?`${p.name} : passer le tour`:"Lancer les Dés";
+}
+function onMainBtn(){
+  if(gameOver){ showSetup(); return; }
+  if(busy)return;
+  const p=players[cur];
+  if(p.skip){ p.skip=false; log("⛓️ "+p.name+" est bloqué et passe son tour.","curse"); endTurn(); return; }
+  rollAndMove();
+}
+function animateDie(el,faces,finalText,cb){
+  el.classList.add('rolling'); let t=0;
+  const iv=setInterval(()=>{ el.textContent=faces[Math.random()*faces.length|0]; },80);
+  setTimeout(()=>{ clearInterval(iv); el.classList.remove('rolling'); el.textContent=finalText; cb&&cb(); },700);
+}
+function rollAndMove(){
+  busy=true; updateMainBtn();
+  const p=players[cur];
+  let roll=1+(Math.random()*6|0);
+  const dieEl=document.getElementById('dieNum');
+  animateDie(dieEl,['🎲','⚀','⚁','⚂','⚃','⚄','⚅'],['⚀','⚁','⚂','⚃','⚄','⚅'][roll-1],()=>{
+    let steps=roll;
+    if(p.halfMove){ steps=Math.ceil(roll/2); p.halfMove=false; log("⛵ Voile déchirée : "+p.name+" n'avance que de "+steps+".","curse"); }
+    log("🎲 "+p.name+" lance le dé : <b>"+roll+"</b>"+(steps!==roll?(" (déplacement réduit à "+steps+")"):"|"));
+    stepMove(p,steps,()=>{ onLand(p); });
+  });
+}
+function stepMove(p,steps,done){
+  if(steps<=0){ done(); return; }
+  p.pos++;
+  if(p.pos>=TRACK){
+    p.pos=0; p.laps=(p.laps||0)+1;
+    log("🏁 "+p.name+" boucle un tour de l'archipel !","treasure");
+  }
+  placeShip(p); highlightCell(); renderPlayers();
+  setTimeout(()=>stepMove(p,steps-1,done),360);
+}
+function onLand(p){
+  if((p.laps||0)>=1){ finishPlayer(p); return; }
+  const t=TYPES[p.pos];
+  log("🧭 "+p.name+" accoste sur : "+TYPEINFO[t].l+" (case "+p.pos+").");
+  const others=players.filter(o=>o!==p&&!o.done&&o.pos%TRACK===p.pos%TRACK);
+  if(others.length>=1 && t!=='start'){
+    handleCollision(p,others); return;
+  }
+  resolveTile(p,t);
+}
+function resolveTile(p,t){
+  switch(t){
+    case 'special': rollSpecialDie(p); break;
+    case 'treasure': giveTreasure(p,()=>afterTile(p)); break;
+    case 'shop': openShop(p); break;
+    case 'wild': wildEvent(p); break;
+    case 'volcano': volcanoEvent(p); break;
+    case 'bar': barEvent(p); break;
+    case 'habit': habitEvent(p); break;
+    case 'ghost': ghostEvent(p); break;
+    default: afterTile(p);
+  }
+}
+function ghostEvent(p){
+  log("👻 La Case du Fantôme ! Le spectre d'Elliott challenge "+p.name+" !","curse");
+  particles('👻',12);
+  const roll=Math.random()*6|0;
+  const face=COMBAT_FACES[roll];
+  const m=document.getElementById('modal');
+  m.innerHTML=`<h2>👻 Elliott le Pendu vous défie !</h2>
+    <div class="card-vis curse">
+      <div class="big">👻</div>
+      <p>Le fantôme surgit et vous lance son dé maudit...</p>
+      <h3>${face.e} ${face.n}</h3>
+      ${face.supreme?'<p style="color:#e74c3c">SUPRÉMATIE ! Le fantôme l\'emporte !</p>':
+        '<p>Puissance du fantôme : <b>'+(face.sword||0)+(face.cannon||0)*3+'</b></p>'}
+    </div>
+    <p>${face.supreme||((face.sword||0)+(face.cannon||0)*3)>0&&power(p)===0?
+      p.name+' perd 1 trésor au profit du prochain passant...':
+      'Votre puissance ('+power(p)+') suffit à tenir le fantôme à distance !'}</p>
+    <div class="btnrow"><button id="closeGhost">Continuer</button></div>`;
+  const ghostPow=(face.cannon||0)*3+(face.sword||0);
+  if(face.supreme||(ghostPow>0&&power(p)===0)){
+    if(p.treasures.length>0){
+      const lost=p.treasures.shift();
+      log("👻 Elliott emporte « "+lost.n+" » laissé sur la case pour le prochain capitaine !","curse");
+      ghostLoot.push({pos:p.pos,t:lost});
+    } else if(p.gold>0){p.gold--;log("👻 Elliott emporte 1 pièce d'or !","curse");}
+    else log("👻 "+p.name+" n'a rien à perdre — Elliott repart bredouille.","curse");
+  } else {
+    log("👻 "+p.name+" résiste au fantôme d'Elliott !","bless");
+  }
+  showOverlay();
+  document.getElementById('closeGhost').onclick=()=>{hideOverlay();afterTile(p);};
+}
+function afterTile(p){
+  renderPlayers(); highlightCell();
+  if(p.extraTurn){ p.extraTurn=false; log("💨 "+p.name+" rejoue grâce au Coup de Chance !","bless"); busy=false; updateMainBtn(); return; }
+  endTurn();
+}
+function endTurn(){
+  renderPlayers();
+  busy=false;
+  do{ cur=(cur+1)%players.length; } while(players[cur].done && players.some(p=>!p.done));
+  if(players.every(p=>p.done)){ endGame(); return; }
+  highlightCell(); renderPlayers(); updateMainBtn();
+  log("➡️ Au tour de <b style='color:"+players[cur].color+"'>"+players[cur].name+"</b>.");
+}
+function wildEvent(p){
+  const roll=1+(Math.random()*6|0);
+  log("🌴 Île sauvage ! "+p.name+" lance le dé : <b>"+roll+"</b>.");
+  if(roll<=3){
+    if(p.swords>0){p.swords--;log("🌴 Piège dans la jungle ! "+p.name+" perd 1 épée (dé ≤3).","curse");}
+    else{log("🌴 Piège dans la jungle ! "+p.name+" n'a pas d'épée à perdre.","curse");}
+    afterTile(p);
+  } else {
+    p.gold+=1; log("🌴 Butin caché dans la jungle ! "+p.name+" trouve 1 pièce d'or (dé ≥4).","treasure"); particles('🪙',8); afterTile(p);
+  }
+}
+function volcanoEvent(p){
+  log("🌋 Le volcan gronde ! "+p.name+" perd une arme dans la lave.","curse");
+  loseWeapon(p); afterTile(p);
+}
+function barEvent(p){
+  const m=document.getElementById('modal');
+  m.innerHTML=`<h2>🍺 Le Vieux Bar & Restaurant</h2>
+    <p>${p.name} s'installe au bar. Un vieux loup de mer vous tend un verre et propose :</p>
+    <div class="shopRow"><span class="lbl2">🃏 Piocher une carte Faveur<br><span class="muted">Le vieux marin a des contacts... (2 🪙)</span></span>
+      <button id="bFavor" ${p.gold<2?'disabled':''} class="sec">Acheter</button></div>
+    <div class="shopRow"><span class="lbl2">⚔️ Acheter 1 épée<br><span class="muted">Un marchand de passage (2 🪙)</span></span>
+      <button id="bSword" ${p.gold<2?'disabled':''} class="sec">Acheter</button></div>
+    <div class="shopRow"><span class="lbl2">🍻 Jouer aux cartes<br><span class="muted">Poker avec les marins : gagner 1 pièce d'or</span></span>
+      <button id="bDrink">Jouer</button></div>
+    <div class="btnrow"><button id="bLeave" class="danger">Repartir</button></div>`;
+  showOverlay();
+  document.getElementById('bFavor').onclick=()=>{p.gold-=2;log(p.name+" paie 2🪙 pour une faveur au bar.");hideOverlay();drawAndApply('favor',p,()=>afterTile(p));};
+  document.getElementById('bSword').onclick=()=>{p.gold-=2;p.swords++;log(p.name+" achète 1 épée au bar (2🪙).");particles('⚔️',6);hideOverlay();afterTile(p);};
+  document.getElementById('bDrink').onclick=()=>{p.gold+=1;log(p.name+" gagne 1🪙 au poker ! 🍻","treasure");particles('🪙',6);hideOverlay();afterTile(p);};
+  document.getElementById('bLeave').onclick=()=>{hideOverlay();afterTile(p);};
+}
+function habitEvent(p){
+  const r=Math.random();
+  if(r<0.5){ log("🏘️ Village paisible : "+p.name+" vend des marchandises (+2 🪙).","treasure"); p.gold+=2; particles('🪙',6); }
+  else { log("🏘️ Village paisible : les habitants offrent un bouclier !","bless"); p.shields++; }
+  afterTile(p);
+}
+const SPECIAL_FACES=[
+  {n:"LE SOUFFLE FANTÔME",e:"☠️"},{n:"LA BÉNÉDICTION DES ABYSSES",e:"🔱"},{n:"ORDRE DE BATAILLE",e:"⚔️"},
+  {n:"LE BUTIN DES COURANTS",e:"🪙"},{n:"LE VENT EN POUPE",e:"🌬️"},{n:"L'APPARITION D'ELLIOTT",e:"👻"}
+];
+function rollSpecialDie(p){
+  const face=Math.random()*6|0;
+  const el=document.getElementById('dieSpecial');
+  animateDie(el,SPECIAL_FACES.map(f=>f.e),SPECIAL_FACES[face].e,()=>{
+    const f=SPECIAL_FACES[face];
+    log("🎲 Dé spécial de "+p.name+" : <b>"+f.n+"</b> "+f.e,"");
+    switch(face){
+      case 0: drawAndApply('curse',p,()=>afterTile(p)); break;
+      case 1: drawAndApply('favor',p,()=>afterTile(p)); break;
+      case 2: chooseCombat(p); break;
+      case 3: p.gold+=2; log("🪙 Le Butin des Courants : "+p.name+" gagne 2 pièces d'or !","treasure"); particles('🪙',10); afterTile(p); break;
+      case 4: moveTo(p,nearestType(p.pos,"habit")); placeShip(p); log("🌬️ Le Vent en Poupe : "+p.name+" file vers le prochain village !","bless"); setTimeout(()=>{highlightCell();afterTile(p);},400); break;
+      case 5: elliottAppearance(p); break;
+    }
+  });
+}
+function elliottAppearance(p){
+  const rivals=players.filter(o=>o!==p&&!o.done&&(o.gold>0||o.swords>0||o.cannons>0));
+  const m=document.getElementById('modal');
+  m.innerHTML=`<h2>👻 L'Apparition d'Elliott !</h2>
+    <div class="card-vis curse">
+      <div class="big">👻</div>
+      <p>Le fantôme du Pendu surgit des brumes... Il vous offre un choix :</p>
+    </div>
+    <div class="btnrow">
+      <button id="ellSteal" ${!rivals.length?'disabled':''}>Piller un rival 🗡️</button>
+      <button id="ellCurse" class="danger">Piocher une malédiction<br><small>+ avancer 4 cases</small></button>
+    </div>`;
+  showOverlay();
+  document.getElementById('ellSteal').onclick=()=>{ hideOverlay(); elliottSteal(p); };
+  document.getElementById('ellCurse').onclick=()=>{
+    hideOverlay();
+    drawAndApply('curse',p,()=>{
+      move(p,4); placeShip(p); log("💀 "+p.name+" accepte la malédiction mais avance de 4 cases !","curse");
+      setTimeout(()=>{highlightCell();onLandAfterShift(p);},360);
+    });
+  };
+}
+function elliottSteal(p){
+  const rivals=players.filter(o=>o!==p&&!o.done);
+  if(!rivals.length){log("👻 Personne à piller !","curse"); afterTile(p); return;}
+  const m=document.getElementById('modal');
+  m.innerHTML=`<h2>🗡️ Qui piller ?</h2><p>Choisissez un capitaine à dépouiller d'une ressource :</p>
+    <div class="btnrow">${rivals.map(r=>`<button class="steal-pick danger" data-id="${r.id}" style="background:linear-gradient(145deg,${r.color},#222)">${r.emoji} ${r.name}<br><small>🪙${r.gold} ⚔️${r.swords} 💣${r.cannons}</small></button>`).join('')}</div>
+    <div class="btnrow"><button id="noSteal" class="sec">Renoncer</button></div>`;
+  showOverlay();
+  m.querySelectorAll('.steal-pick').forEach(b=>b.onclick=()=>{
+    const r=players.find(x=>x.id==b.dataset.id);
+    if(r.gold>0){r.gold--;p.gold++;log(p.name+" vole 1 pièce d'or à "+r.name+" (Elliott).","bless");}
+    else if(r.swords>0){r.swords--;p.swords++;log(p.name+" vole 1 épée à "+r.name+" (Elliott).","bless");}
+    else if(r.cannons>0){r.cannons--;p.cannons++;log(p.name+" vole 1 canon à "+r.name+" (Elliott).","bless");}
+    else log(r.name+" n'a rien à voler.","curse");
+    particles('💀',8); hideOverlay(); renderPlayers(); afterTile(p);
+  });
+  document.getElementById('noSteal').onclick=()=>{hideOverlay();afterTile(p);};
+}
+function onLandAfterShift(p){
+  const others=players.filter(o=>o!==p&&!o.done&&o.pos%TRACK===p.pos%TRACK);
+  if(others.length>=1){ handleCollision(p,others); return; }
+  const t=TYPES[p.pos];
+  if(t==='treasure'){ giveTreasure(p,()=>afterTile(p)); return; }
+  afterTile(p);
+}
+function drawAndApply(kind,p,done){
+  if(kind==='curse'&&p._armorEcume){
+    p._armorEcume=false;
+    const card=drawCurse();
+    log("🛡️ L'Armure d'Écume de "+p.name+" annule « "+card.n+" » !","bless");
+    particles('✨',10); done(); return;
+  }
+  const card=kind==='curse'?drawCurse():drawFavor();
+  const cls=kind==='curse'?'curse':'bless';
+  const m=document.getElementById('modal');
+  m.innerHTML=`
+    <h2>${kind==='curse'?'☠️ Malédiction d\'Elliott':'🔱 Faveur de Poséidon'}</h2>
+    <div class="card-vis ${cls}">
+      <div class="big">${kind==='curse'?'👻':'🌊'}</div>
+      <h3>${card.n}</h3>
+      <p>${card.t}</p>
+    </div>
+    <div class="btnrow"><button id="applyCard">Subir le destin</button></div>`;
+  showOverlay();
+  document.getElementById('applyCard').onclick=()=>{
+    card.f(p);
+    if(kind==='curse'){ log("☠️ "+p.name+" subit « "+card.n+" ».","curse"); particles('👻',8); }
+    else { log("🔱 "+p.name+" reçoit « "+card.n+" ».","bless"); particles('✨',10); }
+    placeShip(p); refreshShips(); highlightCell();
+    let extra='';
+    if(p._peek){ extra='<p class="muted">Prochaines malédictions : '+p._peek.join(' · ')+'</p>'; }
+    if(extra){
+      m.innerHTML=`<h2>🔱 L'Oeil de Poséidon</h2>${extra}<div class="btnrow"><button id="ok2">Continuer</button></div>`;
+      delete p._peek;
+      document.getElementById('ok2').onclick=()=>{hideOverlay();done();};
+    } else { hideOverlay(); done(); }
+    renderPlayers();
+  };
+}
+function giveTreasure(p,done){
+  const t=TREASURES[Math.random()*TREASURES.length|0];
+  let count=1;
+  if(t.multi){ count=1+(Math.random()*3|0); }
+  let txt=`<div class="big">${t.e}</div><h3>${t.n}</h3>`;
+  if(t.gold){ p.gold+=t.gold; txt+=`<p>+${t.gold} pièces d'or et ${t.pts} pts !</p>`; }
+  else if(t.multi){ txt+=`<p>Vous trouvez ${count} perle(s) noire(s) — ${t.pts} pts chacune !</p>`; }
+  else txt+=`<p>Vaut ${t.pts} points.</p>`;
+  if(t.curse) txt+=`<p style="color:#d6a8ec">Mais l'artefact est maudit : une malédiction vous attend...</p>`;
+  if(t.jump) txt+=`<p>Au prochain tour, vous sauterez vers une île au trésor.</p>`;
+  const existing=p.treasures.find(x=>x.key===t.key && (t.multi||t.gold));
+  if(t.multi){ if(existing)existing.count+=count; else p.treasures.push({key:t.key,n:t.n,e:t.e,pts:t.pts,count}); }
+  else p.treasures.push({key:t.key,n:t.n,e:t.e,pts:t.pts,count:1});
+  if(t.jump) p.jumpNext=true;
+  const m=document.getElementById('modal');
+  m.innerHTML=`<h2>💎 Trésor Oublié !</h2><div class="card-vis bless">${txt}</div>
+    <div class="btnrow"><button id="grabT">Empocher le butin</button></div>`;
+  showOverlay(); particles(t.e,16);
+  document.getElementById('grabT').onclick=()=>{
+    log("💎 "+p.name+" récupère « "+t.n+" »"+(t.multi?(" ×"+count):"")+".","treasure");
+    if(t.curse){ hideOverlay(); drawAndApply('curse',p,done); }
+    else { hideOverlay(); done(); }
+    renderPlayers();
+  };
+}
+function openShop(p){
+  let cannonStock=5;
+  function render(){
+    const m=document.getElementById('modal');
+    m.innerHTML=`<h2>🏪 Île des Marchands</h2>
+      <p>Capitaine ${p.name}, tu as <b>🪙 ${p.gold}</b> pièces d'or.</p>
+      <div class="shopRow"><span class="lbl2">⚔️ Épée<br><span class="muted">+1 puissance · 2 🪙</span></span>
+        <button class="small sec" id="buySword" ${p.gold<2?'disabled':''}>Acheter</button></div>
+      <div class="shopRow"><span class="lbl2">💣 Boulet de Canon<br><span class="muted">+3 puissance · 4 🪙 · stock ${cannonStock}</span></span>
+        <button class="small sec" id="buyCannon" ${(p.gold<4||cannonStock<=0)?'disabled':''}>Acheter</button></div>
+      <hr style="border-color:rgba(245,197,66,.3);margin:14px 0">
+      <p class="muted">Vendre des trésors :</p>
+      <div id="sellList"></div>
+      <div class="btnrow"><button id="leaveShop" class="danger">Quitter le port</button></div>`;
+    const sl=m.querySelector('#sellList');
+    const sellable=p.treasures.filter(t=>t.key!=='coffre');
+    if(!sellable.length) sl.innerHTML='<span class="muted">Aucun trésor à vendre.</span>';
+    sellable.forEach((t,i)=>{
+      const val=Math.max(1,Math.round((t.pts)*1));
+      const row=document.createElement('div'); row.className='shopRow';
+      row.innerHTML=`<span class="lbl2">${t.e} ${t.n}${t.count>1?' ×'+t.count:''}<br><span class="muted">vendre 1 pour ${val} 🪙</span></span>`;
+      const b=document.createElement('button'); b.className='small'; b.textContent='Vendre';
+      b.onclick=()=>{ p.gold+=val; if(t.count>1)t.count--; else p.treasures.splice(p.treasures.indexOf(t),1);
+        log(p.name+" vend "+t.n+" pour "+val+" 🪙."); render(); renderPlayers(); };
+      row.appendChild(b); sl.appendChild(row);
+    });
+    m.querySelector('#buySword').onclick=()=>{p.gold-=2;p.swords++;log(p.name+" achète une épée (2🪙).");render();renderPlayers();};
+    m.querySelector('#buyCannon').onclick=()=>{p.gold-=4;p.cannons++;cannonStock--;log(p.name+" achète un boulet de canon (4🪙).");render();renderPlayers();};
+    m.querySelector('#leaveShop').onclick=()=>{hideOverlay();afterTile(p);};
+  }
+  showOverlay(); render();
+}
+function chooseCombat(p){
+  const rivals=players.filter(o=>o!==p&&!o.done);
+  if(!rivals.length){ log("⚔️ Aucun rival à combattre.","combat"); afterTile(p); return; }
+  const m=document.getElementById('modal');
+  m.innerHTML=`<h2>⚔️ Combat !</h2><p>${p.name} choisit un rival à aborder :</p>
+    <div class="btnrow">${rivals.map(r=>`<button class="combatpick danger" data-id="${r.id}" style="background:linear-gradient(145deg,${r.color},#222)">${r.emoji} ${r.name}<br><span class="muted" style="color:#fff">Puissance ${power(r)}</span></button>`).join('')}</div>
+    <div class="btnrow"><button id="noFight" class="sec">Renoncer au combat</button></div>`;
+  showOverlay();
+  m.querySelectorAll('.combatpick').forEach(b=>b.onclick=()=>{
+    const r=players.find(x=>x.id==b.dataset.id); startCombat(p,r,()=>afterTile(p));
+  });
+  document.getElementById('noFight').onclick=()=>{hideOverlay(); log(p.name+" renonce au combat.","combat"); afterTile(p);};
+}
+function handleCollision(p,others){
+  const group=[p,...others];
+  if(group.length>=3){
+    log("🏴 TRÊVE ! "+group.length+" navires sur la même case : aucun combat.","combat");
+    truceModal(group,()=>afterTile(p));
+    return;
+  }
+  const r=others[0];
+  log("⚔️ "+p.name+" croise "+r.name+" : combat inévitable !","combat");
+  startCombat(p,r,()=>afterTile(p));
+}
+function truceModal(group,done){
+  let idx=0;
+  function ask(){
+    if(idx>=group.length){ hideOverlay(); done(); return; }
+    const pl=group[idx];
+    const m=document.getElementById('modal');
+    m.innerHTML=`<h2>🏴 Trêve</h2><p>Trop de navires ! ${pl.name}, vous devez abandonner une arme.</p>
+      <div class="btnrow">
+        <button id="dropS" class="sec" ${pl.swords<=0?'disabled':''}>Jeter 1 épée ⚔️ (${pl.swords})</button>
+        <button id="dropC" class="danger" ${pl.cannons<=0?'disabled':''}>Jeter 1 canon 💣 (${pl.cannons})</button>
+        <button id="dropN" ${(pl.swords||pl.cannons)?'disabled':''}>Aucune arme</button>
+      </div>`;
+    showOverlay();
+    document.getElementById('dropS').onclick=()=>{pl.swords--;log(pl.name+" jette une épée (trêve).","combat");idx++;renderPlayers();ask();};
+    document.getElementById('dropC').onclick=()=>{pl.cannons--;log(pl.name+" jette un canon (trêve).","combat");idx++;renderPlayers();ask();};
+    document.getElementById('dropN').onclick=()=>{idx++;ask();};
+  }
+  ask();
+}
+const COMBAT_FACES=[
+  {n:"Rien",e:"➖",sword:0,cannon:0},
+  {n:"+1 épée",e:"⚔️",sword:1,cannon:0},
+  {n:"+2 épées",e:"⚔️⚔️",sword:2,cannon:0},
+  {n:"+3 épées",e:"⚔️⚔️⚔️",sword:3,cannon:0},
+  {n:"+1 canon",e:"💣",sword:0,cannon:1},
+  {n:"SUPRÉMATIE",e:"👑",supreme:true}
+];
+function startCombat(a,d,done){
+  offerShield(a,d,
+    ()=>{ hideOverlay(); done(); },
+    ()=>resolveCombat(a,d,done));
+}
+function offerShield(a,d,onCancel,onFight){
+  const shielders=[a,d].filter(x=>x.shields>0);
+  if(!shielders.length){ onFight(); return; }
+  let i=0;
+  function ask(){
+    if(i>=shielders.length){ onFight(); return; }
+    const pl=shielders[i];
+    const m=document.getElementById('modal');
+    m.innerHTML=`<h2>🛡️ Bouclier de Corail</h2><p>${pl.name} possède ${pl.shields} bouclier(s). L'utiliser pour annuler ce combat ?</p>
+      <div class="btnrow"><button id="useSh">Utiliser le bouclier</button><button id="noSh" class="sec">Garder & combattre</button></div>`;
+    showOverlay();
+    document.getElementById('useSh').onclick=()=>{ pl.shields--; log("🛡️ "+pl.name+" lève le Bouclier de Corail : combat annulé !","bless"); renderPlayers(); onCancel(); };
+    document.getElementById('noSh').onclick=()=>{ i++; ask(); };
+  }
+  ask();
+}
+function resolveCombat(a,d,done){
+  let fa=Math.random()*6|0, fd=Math.random()*6|0;
+  const FA=COMBAT_FACES[fa], FD=COMBAT_FACES[fd];
+  let pa=power(a), pd=power(d);
+  let supA=FA.supreme, supD=FD.supreme;
+  if(!supA){ pa+=(FA.sword||0)+(FA.cannon||0)*3; }
+  if(!supD){ pd+=(FD.sword||0)+(FD.cannon||0)*3; }
+  const m=document.getElementById('modal');
+  m.innerHTML=`<h2>⚔️ Abordage !</h2>
+    <div class="combatGrid">
+      <div class="fighter" style="border-color:${a.color}">
+        <h3 style="color:${a.color}">${a.emoji} ${a.name}</h3>
+        <div class="muted">Base : ${power(a)} (${a.cannons}💣 ${a.swords}⚔️)</div>
+        <div class="muted">Dé combat : ${FA.e} ${FA.n}</div>
+        <div class="pw">${supA?'👑 SUPRÉMATIE':pa}</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="fighter" style="border-color:${d.color}">
+        <h3 style="color:${d.color}">${d.emoji} ${d.name}</h3>
+        <div class="muted">Base : ${power(d)} (${d.cannons}💣 ${d.swords}⚔️)</div>
+        <div class="muted">Dé combat : ${FD.e} ${FD.n}</div>
+        <div class="pw">${supD?'👑 SUPRÉMATIE':pd}</div>
+      </div>
+    </div>
+    <div id="combatResult"></div>
+    <div class="btnrow"><button id="resolveBtn">Résoudre le combat</button></div>`;
+  showOverlay();
+  log("⚔️ "+a.name+" ("+FA.n+") affronte "+d.name+" ("+FD.n+").","combat");
+  document.getElementById('resolveBtn').onclick=()=>{
+    let winner=null, loser=null, draw=false;
+    if(supA&&supD){ if(pa>=pd){winner=a;loser=d;}else{winner=d;loser=a;} }
+    else if(supA){ winner=a; loser=d; }
+    else if(supD){ winner=d; loser=a; }
+    else if(pa>pd){ winner=a; loser=d; }
+    else if(pd>pa){ winner=d; loser=a; }
+    else draw=true;
+    let txt='';
+    if(draw){
+      a.swords=0;a.cannons=0;d.swords=0;d.cannons=0;
+      txt=`<p style="color:#f5c542;font-size:22px">⚖️ Égalité ! Les deux capitaines perdent toutes leurs armes.</p>`;
+      log("⚖️ Combat nul : "+a.name+" et "+d.name+" perdent leurs armes.","combat");
+    } else {
+      const tcount=loser.treasures.reduce((s,t)=>s+(t.count||1),0);
+      loser.treasures.forEach(lt=>{
+        if(lt.count&&lt.multi){ const ex=winner.treasures.find(x=>x.key===lt.key); if(ex)ex.count+=lt.count; else winner.treasures.push({...lt}); }
+        else winner.treasures.push({...lt});
+      });
+      const stolenGold=loser.gold; winner.gold+=stolenGold; loser.gold=0;
+      loser.treasures=[];
+      txt=`<p style="color:${winner.color};font-size:24px;font-family:'Pirata One'">🏆 ${winner.name} l'emporte !</p>
+           <p>Il s'empare de ${tcount} trésor(s) et ${stolenGold} 🪙 de ${loser.name}.</p>`;
+      log("🏆 "+winner.name+" bat "+loser.name+" et rafle "+tcount+" trésor(s) + "+stolenGold+"🪙 !","combat");
+      particles('💰',16);
+    }
+    document.getElementById('combatResult').innerHTML=txt;
+    document.getElementById('resolveBtn').outerHTML=`<div class="btnrow"><button id="closeC">Continuer</button></div>`;
+    renderPlayers();
+    document.getElementById('closeC').onclick=()=>{ hideOverlay(); done(); };
+  };
+}
+function finishPlayer(p){
+  p.done=true;
+  log("🏁 "+p.name+" rentre au port avec "+score(p)+" points !","treasure");
+  particles('🏆',16);
+  modalSimple("🏁 Retour au Port",
+    `<b style="color:${p.color}">${p.name}</b> a bouclé le tour de l'archipel !<br><br>Score provisoire : <b>${score(p)} points</b>.`,
+    [{txt:"Continuer",act:()=>{hideOverlay(); endTurn();}}]);
+}
+function endGame(){
+  gameOver=true;
+  const ranked=players.slice().sort((a,b)=>score(b)-score(a));
+  const m=document.getElementById('modal');
+  m.innerHTML=`<h2>🏴‍☠️ Fin de la Partie</h2><p>Tous les capitaines sont rentrés au port. Voici le butin final :</p>
+    <div style="margin:14px 0">${ranked.map((p,i)=>`
+      <div class="finalRow ${i===0?'win':''}">
+        <span style="color:${p.color}">${i===0?'👑 ':(i+1)+'. '}${p.emoji} ${p.name}</span>
+        <span><b>${score(p)} pts</b> · ⚔️${p.swords} 💣${p.cannons} 🪙${p.gold} 💎${p.treasures.reduce((s,t)=>s+(t.count||1),0)} 🛡️${p.shields}</span>
+      </div>`).join('')}</div>
+    <p style="font-family:'Pirata One';font-size:26px;color:${ranked[0].color}">Vainqueur : ${ranked[0].name} !</p>
+    <div class="btnrow"><button id="again">Nouvelle Partie</button></div>`;
+  showOverlay(); particles('🎉',24);
+  document.getElementById('again').onclick=()=>showSetup();
+  updateMainBtn(); renderPlayers();
+}
+function modalSimple(title,html,buttons){
+  const m=document.getElementById('modal');
+  m.innerHTML=`<h2>${title}</h2><p>${html}</p><div class="btnrow" id="msBtns"></div>`;
+  const row=m.querySelector('#msBtns');
+  buttons.forEach(b=>{ const el=document.createElement('button'); el.textContent=b.txt; if(b.cls)el.className=b.cls; if(b.dis)el.disabled=true; el.onclick=b.act; row.appendChild(el); });
+  showOverlay();
+}
+function showOverlay(){document.getElementById('overlay').classList.remove('hidden');}
+function hideOverlay(){document.getElementById('overlay').classList.add('hidden');}
+window.addEventListener('resize',()=>{ if(players.length){computeCellPositions(); buildBoard(); highlightCell();} });
+showSetup();
+</script>
+</body>
+</html>
