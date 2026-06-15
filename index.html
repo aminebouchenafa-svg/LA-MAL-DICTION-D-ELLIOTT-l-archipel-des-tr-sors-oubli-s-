@@ -1,1 +1,37 @@
-placeholder_will_be_replaced
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Malédiction d'Elliott — L'Archipel des Trésors Oubliés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#f5c542;--sea:#0a2a4a;--dark:#061523;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--dark);color:#e8f4ff;font-family:'Segoe UI',sans-serif;overflow:hidden;height:100svh;}
+#app{display:flex;flex-direction:column;height:100svh;}
+header{background:linear-gradient(90deg,#061523,#0a2a4a,#061523);border-bottom:2px solid var(--gold);padding:6px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+h1{font-family:'Pirata One';font-size:22px;color:var(--gold);text-shadow:0 0 14px rgba(245,197,66,.5);}
+h1 small{display:block;font-size:11px;color:#9dceee;font-family:'Segoe UI',sans-serif;}
+#turnBox{font-family:'Pirata One';font-size:17px;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.4);padding:5px 14px;border-radius:20px;border:1px solid rgba(245,197,66,.4);}
+.dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+main{flex:1;display:grid;grid-template-columns:220px 1fr 200px;gap:6px;padding:6px;overflow:hidden;min-height:0;}
+aside.side{background:rgba(10,42,74,.6);border:1px solid rgba(245,197,66,.2);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;overflow:hidden;}
+aside.side h2{font-family:'Pirata One';color:var(--gold);font-size:18px;border-bottom:1px solid rgba(245,197,66,.3);padding-bottom:6px;}
+#log{flex:1;overflow-y:auto;font-size:12px;line-height:1.5;display:flex;flex-direction:column;gap:3px;}
+#log div{padding:3px 5px;border-radius:4px;}
+#log .curse{background:rgba(155,89,182,.15);border-left:2px solid #9b59b6;}
+#log .bless{background:rgba(26,188,156,.15);border-left:2px solid #1abc9c;}
+#log .treasure{background:rgba(245,197,66,.12);border-left:2px solid var(--gold);}
+#log .combat{background:rgba(231,76,60,.15);border-left:2px solid #e74c3c;}
+#diceArea{display:flex;flex-direction:column;gap:8px;}
+.die3d{width:64px;height:64px;background:linear-gradient(145deg,#1a4a7a,#0d2a46);border:2px solid var(--gold);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 4px 0 #8a6500,0 6px 16px rgba(0,0,0,.5);transition:transform .1s;}
+.die3d.rolling{animation:shake .3s ease-in-out infinite;}
+.die3d.specialDie{border-color:#1abc9c;box-shadow:0 4px 0 #0d7a5a;}
+@keyframes shake{0%,100%{transform:rotate(-8deg);}50%{transform:rotate(8deg);}}
+#deckDisplay{display:flex;gap:6px;}
+.deckPile{flex:1;padding:5px 6px;border-radius:8px;text-align:center;font-size:10.5px;line-height:1.5;cursor:pointer;}
+.curse-deck{background:rgba(155,89,182,.2);border:1px solid #9b59b6;color:#d6a8ec;}
+.bless-deck{background:rgba(26,188,156,.2);border:1px solid #1abc9c;color:#9deedf;}
+.deckPile .dc{font-family:'Pirata One';font-size:16px;}
