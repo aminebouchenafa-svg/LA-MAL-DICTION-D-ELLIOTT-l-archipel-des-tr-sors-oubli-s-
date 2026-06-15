@@ -41,27 +41,20 @@ aside.side h2{font-family:'Pirata One';color:var(--gold);font-size:18px;border-b
 #compass .star{color:var(--gold);font-size:22px;}
 #compass h3{font-family:'Pirata One';color:var(--gold);font-size:16px;margin:4px 0;}
 #compass p{font-size:10px;color:#9dceee;line-height:1.4;}
-.cell{position:absolute;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:8px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:default;transition:box-shadow .2s;z-index:2;}
-.cell.cur{box-shadow:0 0 0 3px var(--gold),0 0 20px var(--gold);z-index:3;}
+.cell{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:8px;border:1.5px solid rgba(255,255,255,.25);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;cursor:default;transition:box-shadow .2s;font-size:13px;background:rgba(10,42,74,.45);backdrop-filter:blur(1px);}
+.cell.cur{box-shadow:0 0 0 3px var(--gold),0 0 16px var(--gold);z-index:5;}
 .cell .lbl{display:none;}
-.cell>span:not(.num){display:none;}
-.cell .num{display:none;}
-
-
-
-
+.cell .num{font-size:7px;color:rgba(255,255,255,.5);position:absolute;top:2px;left:3px;}
+.cell.start{background:rgba(245,197,66,.3);border-color:var(--gold);}
+.cell.treasure{background:rgba(245,197,66,.25);border-color:rgba(245,197,66,.6);}
+.cell.special{background:rgba(41,128,185,.3);border-color:#2980b9;}
+.cell.volcano{background:rgba(231,76,60,.3);border-color:#e74c3c;}
 .cell.shop{background:rgba(52,152,219,.25);border-color:#3498db;}
-
-
+.cell.ghost{background:rgba(155,89,182,.35);border-color:#9b59b6;}
+.cell.bar{background:rgba(243,156,18,.25);border-color:#f39c12;}
 .cell.habit{background:rgba(46,204,113,.25);border-color:#2ecc71;}
 .ship{position:absolute;width:30px;height:30px;transform:translate(-50%,-50%);border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid currentColor;z-index:4;transition:left .35s,top .35s;background:rgba(0,0,0,.75);box-shadow:0 0 10px currentColor,0 2px 6px rgba(0,0,0,.8);}
 #helpSide{font-size:12px;overflow-y:auto;}
-#posPanel{display:flex;flex-direction:column;gap:6px;}
-.pos-card{border-radius:10px;border:2px solid var(--pc,#fff);padding:7px 9px;background:rgba(0,0,0,.4);}
-.pos-card.active-pc{background:rgba(255,255,255,.08);box-shadow:0 0 12px var(--pc,#fff);}
-.pos-name{font-family:'Pirata One';font-size:13px;color:var(--pc,#fff);}
-.pos-case{font-size:11px;opacity:.85;margin-top:2px;}
-.pos-case b{font-size:13px;}
 #helpSide h2{font-size:16px;}
 #activePanel{line-height:1.6;}
 .legend{font-size:11px;line-height:1.8;}
@@ -187,9 +180,10 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
       </div>
     </section>
     <aside class="side" id="helpSide">
-      <h2>Positions</h2>
-      <div id="posPanel"></div>
-      <div id="activePanel" style="display:none"></div>
+      <h2>Capitaine Actif</h2>
+      <div id="activePanel" style="font-size:12px;line-height:1.6;"></div>
+      <h2 style="margin-top:8px;">Légende</h2>
+      <div class="legend">🌴 Sauvage · 🏘️ Village<br>🌋 Volcan · 🏪 Marchands<br>🍺 Bar · 💎 Trésor<br>🎲 Spéciale · 👻 Fantôme<br>⚓ Départ (+2🪙 au passage)</div>
     </aside>
   </main>
   <footer id="footer"></footer>
@@ -302,17 +296,7 @@ function renderPlayers(){
     f.appendChild(nav);
   });
   const p=players[cur];
-  if(p){const ch=CHARS.find(c=>c.id===p.id);const tr=p.treasures.map(t=>`${t.e} ${t.n}${t.count>1?' ×'+t.count:''}`).join('<br>')||'<span class="muted">aucun</span>';const posPanel=document.getElementById('posPanel');
-    if(posPanel){posPanel.innerHTML=players.map((pl,i)=>{
-      const ti=TYPEINFO[TYPES[pl.pos%TRACK]];
-      const isAct=i===cur;
-      return `<div class="pos-card${isAct?' active-pc':''}" style="--pc:${pl.color}">
-        <div class="pos-name"><span style="font-size:15px">${pl.emoji}</span> ${pl.name}</div>
-        <div class="pos-case">⛵ <b>Case ${pl.pos%TRACK}</b> ${ti.e} ${ti.l}${pl.done?' ✅':''}</div>
-        <div class="pos-case">🪙${pl.gold} ⚔️${pl.swords} 💣${pl.cannons} 🏆${score(pl)}pts</div>
-      </div>`;
-    }).join('');}
-    document.getElementById('activePanel').innerHTML=`<b style="color:${p.color}">${p.emoji} ${p.name}</b><br><span class="muted">${ch.navire}</span><br><br><b>Pouvoir :</b> ${ch.power.icon} ${ch.power.name}<br><span class="muted" style="font-size:11px">${ch.power.desc}</span><br><br><b>Puissance combat :</b> ${power(p)}<br><b>Trésors :</b><br>${tr}<br><br><b>Score :</b> ${score(p)} pts`;const tb=document.getElementById('turnBox');tb.style.color=p.color;tb.querySelector('.dot').style.background=p.color;document.getElementById('turnName').textContent=gameOver?'Partie terminée':p.name;}
+  if(p){const ch=CHARS.find(c=>c.id===p.id);const tr=p.treasures.map(t=>`${t.e} ${t.n}${t.count>1?' ×'+t.count:''}`).join('<br>')||'<span class="muted">aucun</span>';document.getElementById('activePanel').innerHTML=`<b style="color:${p.color}">${p.emoji} ${p.name}</b><br><span class="muted">${ch.navire}</span><br><br><b>Pouvoir :</b> ${ch.power.icon} ${ch.power.name}<br><span class="muted" style="font-size:11px">${ch.power.desc}</span><br><br><b>Puissance combat :</b> ${power(p)}<br><b>Trésors :</b><br>${tr}<br><br><b>Score :</b> ${score(p)} pts`;const tb=document.getElementById('turnBox');tb.style.color=p.color;tb.querySelector('.dot').style.background=p.color;document.getElementById('turnName').textContent=gameOver?'Partie terminée':p.name;}
 }
 function power(p){return p.cannons*3+p.swords+(p.furyBonus||0);}
 function loseWeapon(p,silent){if(p.cannons>0){p.cannons--;if(!silent)log(p.name+" perd 1💣.","curse");}else if(p.swords>0){p.swords--;if(!silent)log(p.name+" perd 1⚔️.","curse");}else if(!silent)log(p.name+" n'a aucune arme.","curse");}
